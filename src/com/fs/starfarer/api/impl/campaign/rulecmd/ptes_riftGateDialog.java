@@ -8,6 +8,7 @@ import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.impl.campaign.GateEntityPlugin;
 import com.fs.starfarer.api.impl.campaign.ids.Submarkets;
 import com.fs.starfarer.api.impl.campaign.procgen.StarSystemGenerator;
+import com.fs.starfarer.api.impl.campaign.ui.ptes_giveMapUI;
 import com.fs.starfarer.api.impl.campaign.ui.ptes_mapSelectUI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
@@ -45,8 +46,6 @@ public class ptes_riftGateDialog extends BaseCommandPlugin {
     public StarSystemAPI system;
 
     protected void init(SectorEntityToken entity) {
-
-
         memory = entity.getMemoryWithoutUpdate();
         this.entity = entity;
         playerFleet = Global.getSector().getPlayerFleet();
@@ -156,12 +155,16 @@ public class ptes_riftGateDialog extends BaseCommandPlugin {
     }
 
     protected void GiveMap() {
+        dialog.showCustomDialog(500, 700, new ptes_giveMapUI());
+        /*
         WeightedRandomPicker<StarSystemGenerator.StarSystemType> picker = new WeightedRandomPicker<>();
         picker.addAll(EnumSet.allOf(StarSystemGenerator.StarSystemType.class));
 
         float FP = MathUtils.getRandomNumberInRange(50, 400);
         ptes_mapItemInfo map = new ptes_mapItemInfo("pos_map", null, FP, FP * MathUtils.getRandomNumberInRange(0.5f, 2f), weightedFactions.pick().faction, picker.pick());
         Global.getSector().getPlayerFleet().getCargo().addSpecial(map, 1);
+
+         */
     }
 
     protected void moveGate(){
@@ -194,7 +197,10 @@ public class ptes_riftGateDialog extends BaseCommandPlugin {
                         gate.setLocation(entity.getStarSystem().getLocation().x + rotation.x,entity.getStarSystem().getLocation().y + rotation.y);
                         gate.getMemoryWithoutUpdate().set("$wasMoved", true, 120);
                         system = Global.getSector().getStarSystem("PoSMap");
-                        system.getLocation().set(gate.getLocation());
+                        if (system != null) {
+                            system.getLocation().set(gate.getLocation());
+                            system.getHyperspaceAnchor().setLocation(system.getLocation().x, system.getLocation().y);
+                        }
                         dialog.dismissAsCancel();
                     }
 

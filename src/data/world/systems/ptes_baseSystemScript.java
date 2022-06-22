@@ -6,6 +6,7 @@ import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.campaign.econ.MarketConditionAPI;
 import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import com.fs.starfarer.api.impl.campaign.procgen.themes.BaseThemeGenerator;
+import com.fs.starfarer.api.impl.campaign.procgen.themes.Themes;
 import data.scripts.items.ptes_mapItemInfo;
 import data.scripts.plugins.ptes_baseEffectPlugin;
 import data.scripts.plugins.ptes_faction;
@@ -37,6 +38,8 @@ public class ptes_baseSystemScript {
             system.setName("Map");
             system.addTag(Tags.SYSTEM_CUT_OFF_FROM_HYPER);
             system.addTag(Tags.TRANSIENT);
+            system.addTag(Tags.THEME_HIDDEN);
+            system.generateAnchorIfNeeded();
             Global.getLogger(ptes_genericSystem.class).info("made new system");
             //Global.getLogger(ptes_genericSystem.class).info(system.getName());
         } else {
@@ -45,6 +48,7 @@ public class ptes_baseSystemScript {
             for (SectorEntityToken entity : cloneList) {
                 system.removeEntity(entity);
             }
+            system.generateAnchorIfNeeded();
         }
 
         //move system under gate just in case
