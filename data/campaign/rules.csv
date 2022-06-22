@@ -1,0 +1,11 @@
+id,trigger,conditions,script,text,options,notes
+ptes_riftgate,PopulateOptions,$tag:rift_gate,"ShowDefaultVisual
+SetShortcut beaconLeave ""ESCAPE""
+ptes_riftGateDialog main",,"ptes_create_system:Create system
+ptes_getInside:Get in to system
+ptes_giveRandomMap:Get random Map item
+ptes_moveGate:Move gate",
+ptes_riftgate_create_system,DialogOptionSelected,$option == ptes_create_system,ptes_riftGateDialog generateSystem,,,
+ptes_riftgate_getInToSystem,DialogOptionSelected,$option == ptes_getInside,ptes_riftGateDialog getInToSystem,,,
+ptes_riftgate_giveRandomMap,DialogOptionSelected,$option == ptes_giveRandomMap,ptes_riftGateDialog giveRandomMap,,,
+ptes_riftgate_moveGate,DialogOptionSelected,$option == ptes_moveGate,ptes_riftGateDialog moveGate,,,

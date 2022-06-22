@@ -1,0 +1,21 @@
+id,cost,weight,faction restriction
+#id of salvage entity,cost to spawn in loot points ,"spawn weight,  stuff above 100 cost is in separate pool",limits spawn to only those factions leave empty to allow for all factions
+supply_cache,20,10,
+weapons_cache,25,9,
+weapons_cache_remnant,35,5,
+weapons_cache_low,20,8,
+weapons_cache_high,25,7,
+equipment_cache,20,10,
+supply_cache_small,10,10,
+weapons_cache_small,12,9,
+weapons_cache_small_remnant,17,5,
+weapons_cache_small_low,10,8,
+weapons_cache_small_high,12,7,
+equipment_cache_small,10,10,"omega,remnant"
+alpha_site_weapons_cache,75,3,omega
+station_research_remnant,250,15,remnant
+station_mining_remnant,175,21,remnant
+orbital_habitat_remnant,125,30,remnant
+station_research,200,5,
+station_mining,150,7,
+orbital_habitat,100,10,

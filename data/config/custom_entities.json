@@ -1,0 +1,32 @@
+{
+    "ptpos_gate":{
+        "defaultName":"Rift Gate", # used if name=null in addCustomEntity()
+        "nameInText":"rift gate",
+        "shortName":"rift gate",
+        "icon":"graphics/icons/icon_portal.png",
+        "iconWidth":36,
+        "iconHeight":36,
+        "sprite":"graphics/stations/ptpos_gate.png",
+        "spriteWidth":150,
+        "spriteHeight":150,
+        "customDescriptionId":"int_array",
+        "interactionImage":"graphics/illustrations/comm_relay.jpg",
+        "defaultRadius":75, # used if radius<0 in addCustomEntity()
+        "showInCampaign":true, # show in campaign layer
+        "showIconOnMap":true,
+        "showNameOnMap":true,
+		"renderShadow":false, #true,
+		"useLightColor":false,
+        "nameFontScale":1,
+        "nameAngle":0,
+        "nameColor":[70,200,255,0],
+        "nameShadowColor":[0,0,0,0],
+        "scaleNameWithZoom":false,
+        "scaleIconWithZoom":true,
+        "renderCircleIndicator":true, # make clickable
+        "renderCircleIndicatorSelectionFlash":true,
+		"tags":["station"],
+        "layers":[STATIONS], # what layer(s) to render in. See CampaignEngineLayers.java for possible values,
+		"pluginClass":"com.fs.starfarer.api.impl.campaign.GateEntityPlugin",       
+    },
+}

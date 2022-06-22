@@ -1,0 +1,12 @@
+{
+	"id":"pt_exiledSpace",
+	"name":"Exiled Space",
+	"author":"PureTilt",
+	"version":"0.1.0",
+	"description":"PoE mapts in Starsector",
+	"gameVersion":"0.95.1a-RC6",
+    "dependencies": [
+    ],
+	"jars":["jars/ExiledSpace.jar"],
+	"modPlugin":"data.scripts.ptes_ModPlugin"
+}

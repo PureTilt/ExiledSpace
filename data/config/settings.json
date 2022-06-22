@@ -1,0 +1,19 @@
+{
+	"plugins":{
+		#"PTilt_shipDirection":"data.scripts.plugins.PTilt_shipDirection",
+	},
+	"graphics":{
+		"marker":{
+			"direction2":"graphics/icons/PT_dirmarker2.png",
+		},
+		"icons":{
+			"ptpos_binaryClose":"graphics/icons/ptpos_binaryClose.png",
+			"ptpos_binaryFar":"graphics/icons/ptpos_binaryFar.png",
+			"ptpos_trinity1Far":"graphics/icons/ptpos_trinity1Far.png",
+			"ptpos_trinity2Far":"graphics/icons/ptpos_trinity2Far.png",
+			"ptpos_trinityClose":"graphics/icons/ptpos_trinityClose.png",
+			"ptpos_nebula_center":"graphics/icons/ptpos_nebula.png",
+			"ptpos_star1":"graphics/icons/ptpos_star.png",
+		},
+	},
+}

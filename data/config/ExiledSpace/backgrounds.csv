@@ -1,0 +1,10 @@
+name,weight
+#name of BG image should be in graphics/backgrounds/, weight multy leave empty to have it at 1
+background_galatia.jpg
+background1.jpg
+background2.jpg
+background3.jpg
+background4.jpg
+background5.jpg
+background6.jpg
+hyperspace1.jpg

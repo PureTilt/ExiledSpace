@@ -1,0 +1,2 @@
+name,id,tags,tech/manufacturer,rarity,base price,stack size,cargo space,baseRaidDanger,icon,sound id,sound id drop,plugin,plugin params,desc,order
+Location chip,pos_map,"pos_map, no_drop",,,1000,2,1,,graphics/icons/cargo/blueprint_basic.png,ui_cargo_crew,ui_cargo_crew_drop,data.scripts.items.ptes_mapItemPlugin,,,800
