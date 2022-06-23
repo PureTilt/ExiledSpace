@@ -137,6 +137,8 @@ public class ptes_genericSystem extends ptes_baseSystemScript {
         }
     }
 
+
+
     void generateFleets(StarSystemAPI system) {
         int fleetsToSpawn = MathUtils.getRandomNumberInRange(2, 4);
         fleetsToSpawn += Math.round(EnemyFP / 200f - 0.5f);
@@ -154,6 +156,7 @@ public class ptes_genericSystem extends ptes_baseSystemScript {
                 0f, // utilityPts
                 200 // qualityBonus
         );
+
 
         params.maxNumShips = 100;
         params.minShipSize = Math.min(3, Math.round(EnemyFP / 200f - 0.5f));

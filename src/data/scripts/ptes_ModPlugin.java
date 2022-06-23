@@ -112,6 +112,7 @@ public class ptes_ModPlugin extends BaseModPlugin {
         for (FactionAPI faction : Global.getSector().getAllFactions()){
             faction.setRelationship("uknown", -100);
         }
+        Global.getSector().getFaction("uknown").setRelationship("uknown", 100);
     }
 
     @Override

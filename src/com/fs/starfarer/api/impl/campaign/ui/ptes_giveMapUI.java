@@ -10,7 +10,9 @@ import data.scripts.items.ptes_mapItemInfo;
 import data.scripts.items.ptes_mapItemPlugin;
 import data.scripts.plugins.ptes_faction;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static data.scripts.ptes_ModPlugin.FactionMap;
@@ -18,9 +20,15 @@ import static data.scripts.ptes_ModPlugin.weightedFactions;
 
 public class ptes_giveMapUI implements CustomDialogDelegate {
 
-    HashMap<ButtonAPI, Map.Entry<String, ptes_faction>> buttons = new HashMap<ButtonAPI, java.util.Map.Entry<String, ptes_faction>>();
+    HashMap<ButtonAPI, ptes_faction> buttons = new HashMap<>();
 
-    TextFieldAPI text;
+    TextFieldAPI FP;
+    TextFieldAPI LP;
+
+    List<ButtonAPI> givemapButtonlist = new ArrayList<>();
+    List<TextFieldAPI> textFields = new ArrayList<>();
+    ButtonAPI giveMapButton;
+
     public ptes_giveMapUI(){
 
     }
@@ -36,19 +44,20 @@ public class ptes_giveMapUI implements CustomDialogDelegate {
 
         float spacerHeight = 5f;
         final float backgroundBoxWidth = width - 10f;
-        TooltipMakerAPI UI = panel.createUIElement(width,height, true);
+        TooltipMakerAPI radioSelectPanel = panel.createUIElement(width,height, true);
         float totalWeight = weightedFactions.getTotal();
+        boolean doonce = true;
         for (Map.Entry<String, ptes_faction> pair : FactionMap.entrySet()){
-
-                ButtonAPI button = UI.addAreaCheckbox("", null, Misc.getBasePlayerColor(), Misc.getDarkPlayerColor(), Misc.getBrightPlayerColor(), 0, 0, 0, true);
 
                 FactionAPI faction = Global.getSector().getFaction(pair.getValue().faction);
                 String factionName =  faction.getDisplayName();
 
 
-                //UI.addToGrid(10,10,factionName,"10");
+                ButtonAPI button = radioSelectPanel.addAreaCheckbox("", faction.getId(), Misc.getBasePlayerColor(), Misc.getDarkPlayerColor(), Misc.getBrightPlayerColor(), 0, 0, 0, true);
 
-                TooltipMakerAPI image = UI.beginImageWithText(faction.getCrest(), 64);
+                //radioSelectPanel.addToGrid(10,10,factionName,"10");
+
+                TooltipMakerAPI image = radioSelectPanel.beginImageWithText(faction.getCrest(), 64);
 
                 image.addPara(factionName + "", pad, faction.getColor(), factionName);
                 image.addPara("Weight: " + pair.getValue().weight, pad , Misc.getHighlightColor(), pair.getValue().weight + "");
@@ -57,35 +66,63 @@ public class ptes_giveMapUI implements CustomDialogDelegate {
 
                 image.addSpacer(10f);
 
-                UI.addImageWithText(opad);
+                radioSelectPanel.addImageWithText(opad);
 
-                PositionAPI imageWithTextPosition = UI.getPrev().getPosition();
+                PositionAPI imageWithTextPosition = radioSelectPanel.getPrev().getPosition();
 
                 float imageWithTextHeight = imageWithTextPosition.getHeight();
                 float imageWithTextWidth = imageWithTextPosition.getWidth();
                 float imageWithTextXOffset = 7f;
-                UI.addSpacer(spacerHeight);
+                radioSelectPanel.addSpacer(spacerHeight);
                 imageWithTextPosition.setXAlignOffset(imageWithTextXOffset);
                 imageWithTextPosition.setSize(imageWithTextWidth, imageWithTextHeight);
                 button.getPosition().setSize(backgroundBoxWidth, imageWithTextHeight + spacerHeight * 2f);
                 imageWithTextPosition.setYAlignOffset(imageWithTextHeight + spacerHeight);
-                UI.addSpacer(0f).getPosition().setXAlignOffset(-imageWithTextXOffset);
+                radioSelectPanel.addSpacer(0f).getPosition().setXAlignOffset(-imageWithTextXOffset);
 
-                //buttons.put(button, stack);
-
+                buttons.put(button, pair.getValue());
+                if (doonce){
+                    button.setChecked(true);
+                    doonce = false;
+                }
         }
 
-        panel.addUIElement(UI).inTL(0f, 0f);
+        panel.addUIElement(radioSelectPanel).inTL(0f, 0f);
+
+        TooltipMakerAPI numberPanel = panel.createUIElement(100, 50, false);
+        numberPanel.addTitle("Fleet Points");
+        TextFieldAPI text = numberPanel.addTextField(100,pad);
+        FP = text;
+        textFields.add(FP);
+        text.getTextLabelAPI().setAlignment(Alignment.BR);
+        text.setText("100");
+        panel.addUIElement(numberPanel).inTL(380, 0f);
+
+        numberPanel = panel.createUIElement(100, 50, false);
+        numberPanel.addTitle("Loot Points");
+        text = numberPanel.addTextField(100,pad);
+        LP = text;
+        textFields.add(LP);
+        text.getTextLabelAPI().setAlignment(Alignment.BR);
+        text.setText("100");
+        panel.addUIElement(numberPanel).inTL(380, 50f);
+
+        numberPanel = panel.createUIElement(100, 25, false);
+        panel.addUIElement(numberPanel).inTL(380, 100);
+        giveMapButton = numberPanel.addAreaCheckbox("Give Map", null, Misc.getBasePlayerColor(), Misc.getDarkPlayerColor(), Misc.getBrightPlayerColor(), 100, 25, 0, true);
+        givemapButtonlist.add(giveMapButton);
+        if (giveMapButton == null) Global.getLogger(ptes_giveMapUIPlugin.class).info("button is null");
+
     }
 
     @Override
     public boolean hasCancelButton() {
-        return true;
+        return false;
     }
 
     @Override
     public String getConfirmText() {
-        return null;
+        return "Close";
     }
 
     @Override
@@ -95,13 +132,6 @@ public class ptes_giveMapUI implements CustomDialogDelegate {
 
     @Override
     public void customDialogConfirm() {
-        try {
-            Global.getLogger(ptes_giveMapUI.class).info(Integer.valueOf(text.getText()));
-        } catch (NumberFormatException e) {
-            Global.getLogger(ptes_giveMapUI.class).info("not a number");
-            e.printStackTrace();
-        }
-
     }
 
     @Override
@@ -111,6 +141,6 @@ public class ptes_giveMapUI implements CustomDialogDelegate {
 
     @Override
     public CustomUIPanelPlugin getCustomPanelPlugin() {
-        return null;
+        return new ptes_giveMapUIPlugin(buttons, givemapButtonlist, textFields);
     }
 }

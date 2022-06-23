@@ -20,7 +20,7 @@ public class ptes_mapItemInfo extends SpecialItemData {
 
     int dopID = MathUtils.getRandomNumberInRange(0, 99999999);
 
-    public ptes_mapItemInfo(String id, String data, Float FP, Float lootPoints, String factionID) {
+    public ptes_mapItemInfo(String id, String data, int FP, int lootPoints, String factionID) {
         super(id, data);
         this.LP = Math.round(lootPoints);
         this.FP = Math.round(FP);
@@ -28,7 +28,7 @@ public class ptes_mapItemInfo extends SpecialItemData {
         systemType = null;
     }
 
-    public ptes_mapItemInfo(String id, String data, Float FP, Float lootPoints, String factionID, StarSystemGenerator.StarSystemType systemType) {
+    public ptes_mapItemInfo(String id, String data, int FP, int lootPoints, String factionID, StarSystemGenerator.StarSystemType systemType) {
         super(id, data);
         this.LP = Math.round(lootPoints);
         this.FP = Math.round(FP);
@@ -36,7 +36,7 @@ public class ptes_mapItemInfo extends SpecialItemData {
         this.systemType = systemType;
     }
 
-    public ptes_mapItemInfo(String id, String data, Float FP, Float lootPoints, String factionID, StarSystemGenerator.StarSystemType systemType, List<ptes_baseEffectPlugin> effects) {
+    public ptes_mapItemInfo(String id, String data, int FP, int lootPoints, String factionID, StarSystemGenerator.StarSystemType systemType, List<ptes_baseEffectPlugin> effects) {
         super(id, data);
         this.LP = Math.round(lootPoints);
         this.FP = Math.round(FP);

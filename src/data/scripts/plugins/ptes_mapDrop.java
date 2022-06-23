@@ -81,7 +81,7 @@ public class ptes_mapDrop extends BaseCampaignEventListener {
                 if (chance.nextFloat() >= 0.66f || !FactionMap.containsKey(factionID)) {
                     factionID = weightedFactions.pick().faction;
                 }
-                loot.addSpecial(new ptes_mapItemInfo("pos_map", null, FP, FP * MathUtils.getRandomNumberInRange(0.75f, 1.25f) * lootMult * (1 - (Dmods * 0.075f)), factionID, picker.pick()), 1);
+                loot.addSpecial(new ptes_mapItemInfo("pos_map", null, Math.round(FP), Math.round(FP * MathUtils.getRandomNumberInRange(0.75f, 1.25f) * lootMult * (1 - (Dmods * 0.075f))), factionID, picker.pick()), 1);
             }
         }
         //loot.addCommodity("lobster",1);
