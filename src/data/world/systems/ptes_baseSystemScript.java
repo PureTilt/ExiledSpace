@@ -4,12 +4,16 @@ import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.*;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.campaign.econ.MarketConditionAPI;
+import com.fs.starfarer.api.impl.campaign.fleets.FleetParamsV3;
+import com.fs.starfarer.api.impl.campaign.ids.FleetTypes;
 import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import com.fs.starfarer.api.impl.campaign.procgen.themes.BaseThemeGenerator;
 import com.fs.starfarer.api.impl.campaign.procgen.themes.Themes;
 import data.scripts.items.ptes_mapItemInfo;
 import data.scripts.plugins.ptes_baseEffectPlugin;
 import data.scripts.plugins.ptes_faction;
+import org.lazywizard.lazylib.MathUtils;
+import org.lwjgl.util.vector.Vector2f;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -26,6 +30,8 @@ public class ptes_baseSystemScript {
     ptes_faction faction;
     ptes_mapItemInfo mapData;
     List<ptes_baseEffectPlugin> effects;
+
+    FleetParamsV3 params;
 
     boolean devMode = Global.getSettings().isDevMode();
 
@@ -61,6 +67,7 @@ public class ptes_baseSystemScript {
         this.effects = mapData.effects;
         faction = FactionMap.get(mapData.FactionId);
 
+
         //apply effects before gen
         for (ptes_baseEffectPlugin effect : effects){
             effect.beforeGeneration(system, this);
@@ -92,6 +99,37 @@ public class ptes_baseSystemScript {
                 }
             }
         }
+    }
+
+    void generateFleetParams(){
+        float EnemyFP = this.EnemyFP * faction.FPMulti;
+        int fleetsToSpawn = MathUtils.getRandomNumberInRange(2, 4);
+        fleetsToSpawn += Math.round(EnemyFP / 200f - 0.5f);
+        params = new FleetParamsV3(
+                null, // market
+                new Vector2f(), // location
+                faction.faction, // fleet's faction, if different from above, which is also used for source market picking
+                null,
+                getFleetType(EnemyFP),
+                EnemyFP, // combatPts
+                0f, // freighterPts
+                0f, // tankerPts
+                0f, // transportPts
+                0f, // linerPts
+                0f, // utilityPts
+                200 // qualityBonus
+        );
+
+
+        params.maxNumShips = 100;
+        params.minShipSize = Math.min(3, Math.round(EnemyFP / 200f - 0.5f));
+        params.ignoreMarketFleetSizeMult = true;
+    }
+
+    public String getFleetType (float FP){
+        if (FP <= 25) return FleetTypes.PATROL_SMALL;
+        else if (FP <= 100) return FleetTypes.PATROL_MEDIUM;
+        else return FleetTypes.PATROL_LARGE;
     }
 
     public void generateSystem(StarSystemAPI system, InteractionDialogAPI dialog){

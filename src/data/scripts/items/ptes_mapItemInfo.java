@@ -52,7 +52,7 @@ public class ptes_mapItemInfo extends SpecialItemData {
 
     @Override
     public boolean equals(Object obj) {
-        return false;
+        return this == obj;
     }
 
 }

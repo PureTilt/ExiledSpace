@@ -137,9 +137,34 @@ public class ptes_genericSystem extends ptes_baseSystemScript {
         }
     }
 
+    void generateFleetParams(){
+        float EnemyFP = this.EnemyFP * faction.FPMulti;
+        int fleetsToSpawn = MathUtils.getRandomNumberInRange(2, 4);
+        fleetsToSpawn += Math.round(EnemyFP / 200f - 0.5f);
+        FleetParamsV3 params = new FleetParamsV3(
+                null, // market
+                new Vector2f(), // location
+                faction.faction, // fleet's faction, if different from above, which is also used for source market picking
+                null,
+                getFleetType(EnemyFP),
+                EnemyFP, // combatPts
+                0f, // freighterPts
+                0f, // tankerPts
+                0f, // transportPts
+                0f, // linerPts
+                0f, // utilityPts
+                200 // qualityBonus
+        );
+
+        params.maxNumShips = 100;
+        params.minShipSize = Math.min(3, Math.round(EnemyFP / 200f - 0.5f));
+        params.ignoreMarketFleetSizeMult = true;
+    }
 
 
-    void generateFleets(StarSystemAPI system) {
+
+    void generateFleets(StarSystemAPI system, FleetParamsV3 params) {
+        float EnemyFP = this.EnemyFP * faction.FPMulti;
         int fleetsToSpawn = MathUtils.getRandomNumberInRange(2, 4);
         fleetsToSpawn += Math.round(EnemyFP / 200f - 0.5f);
         FleetParamsV3 params = new FleetParamsV3(
