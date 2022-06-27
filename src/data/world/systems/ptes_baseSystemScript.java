@@ -103,8 +103,11 @@ public class ptes_baseSystemScript {
 
     void generateFleetParams(){
         float EnemyFP = this.EnemyFP * faction.FPMulti;
+        /*
         int fleetsToSpawn = MathUtils.getRandomNumberInRange(2, 4);
         fleetsToSpawn += Math.round(EnemyFP / 200f - 0.5f);
+
+         */
         params = new FleetParamsV3(
                 null, // market
                 new Vector2f(), // location
