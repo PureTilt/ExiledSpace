@@ -140,6 +140,7 @@ public class ptes_riftGateDialog extends BaseCommandPlugin {
     protected void GetInToSystem() {
         system = Global.getSector().getStarSystem("PoSMap");
         SectorEntityToken target = system.getJumpPoints().get(MathUtils.getRandomNumberInRange(0, system.getJumpPoints().size() - 1));
+        //SectorEntityToken target = system.getAllEntities().get(0);
         JumpPointAPI.JumpDestination dest = new JumpPointAPI.JumpDestination(target, "System");
         Global.getSector().doHyperspaceTransition(playerFleet, entity, dest, 0);
         Global.getSector().reportFleetJumped(playerFleet, entity, dest);
@@ -149,8 +150,6 @@ public class ptes_riftGateDialog extends BaseCommandPlugin {
             playerCargo.removeSupplies(getSuppliesCost());
             playerCargo.removeFuel(getFuelCost());
         }
-        playerFleet.getStats().getFleetwideMaxBurnMod().unmodify("ptes");
-        playerFleet.getStats().getSensorRangeMod().unmodify("ptes");
         dialog.dismissAsCancel();
     }
 

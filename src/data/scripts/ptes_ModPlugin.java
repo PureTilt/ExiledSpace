@@ -3,6 +3,7 @@ package data.scripts;
 import com.fs.starfarer.api.BaseModPlugin;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.FactionAPI;
+import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.util.WeightedRandomPicker;
 import data.scripts.plugins.ptes_faction;
 import data.scripts.plugins.ptes_salvageEntity;

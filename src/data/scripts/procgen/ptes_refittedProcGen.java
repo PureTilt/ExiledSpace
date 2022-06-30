@@ -14,9 +14,8 @@ import com.fs.starfarer.api.util.WeightedRandomPicker;
 import org.lwjgl.util.vector.Vector2f;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.Set;
+import java.util.*;
+import java.util.List;
 
 public class ptes_refittedProcGen extends StarSystemGenerator{
 
@@ -32,7 +31,37 @@ public class ptes_refittedProcGen extends StarSystemGenerator{
 	}
 
 	public void generateSystem(){
+
 		generateSystem(new Vector2f());
+
+		Constellation.ConstellationType type = Constellation.ConstellationType.NORMAL;
+		if (!NEBULA_NONE.equals(nebulaType)) {
+			type = Constellation.ConstellationType.NEBULA;
+		}
+		if (system.getConstellation() == null){
+			Constellation c = new Constellation(type, constellationAge);
+			system.setConstellation(c);
+			//c.setType(ConstellationType.NORMAL); // for now; too many end up being called "Nebula" otherwise
+			c.getSystems().add(system);
+		} else {
+			Constellation c = system.getConstellation();
+			c.setLagrangeParentMap(lagrangeParentMap);
+			c.setAllEntitiesAdded(allNameableEntitiesAdded);
+		}
+
+//		SalvageEntityGeneratorOld seg = new SalvageEntityGeneratorOld(c);
+//		seg.addSalvageableEntities();
+
+		ptes_refittedNamer namer = new ptes_refittedNamer(system.getConstellation());
+		namer.setSpecialNamesProbability(1);
+		namer.setRenameSystem(false);
+		namer.assignNames(null, null);
+
+		for (SectorEntityToken entity : this.allNameableEntitiesAdded.keySet()) {
+			if (entity instanceof PlanetAPI && entity.getMarket() != null) {
+				entity.getMarket().setName(entity.getName());
+			}
+		}
 	}
 
 	@Override

@@ -3,18 +3,19 @@ package data.world.systems;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.*;
 import com.fs.starfarer.api.impl.campaign.fleets.FleetFactoryV3;
-import com.fs.starfarer.api.impl.campaign.fleets.FleetParamsV3;
-import com.fs.starfarer.api.impl.campaign.ids.*;
-import com.fs.starfarer.api.impl.campaign.procgen.*;
-import com.fs.starfarer.api.impl.campaign.procgen.themes.*;
+import com.fs.starfarer.api.impl.campaign.ids.Abilities;
+import com.fs.starfarer.api.impl.campaign.ids.Factions;
+import com.fs.starfarer.api.impl.campaign.ids.MemFlags;
+import com.fs.starfarer.api.impl.campaign.procgen.StarAge;
+import com.fs.starfarer.api.impl.campaign.procgen.StarSystemGenerator;
+import com.fs.starfarer.api.impl.campaign.procgen.themes.BaseThemeGenerator;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 import com.fs.starfarer.api.util.WeightedRandomPicker;
-import data.scripts.ptes_ModPlugin;
 import data.scripts.plugins.ptes_salvageEntity;
 import data.scripts.procgen.ptes_refittedProcGen;
+import data.scripts.ptes_ModPlugin;
 import org.lazywizard.lazylib.MathUtils;
-import org.lwjgl.util.vector.Vector2f;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -23,7 +24,7 @@ import java.util.Random;
 
 import static com.fs.starfarer.api.impl.campaign.procgen.StarSystemGenerator.NEBULA_NONE;
 import static com.fs.starfarer.api.impl.campaign.procgen.themes.BaseThemeGenerator.addSalvageEntity;
-import static data.scripts.ptes_ModPlugin.*;
+import static data.scripts.ptes_ModPlugin.salvageList;
 
 public class ptes_genericSystem extends ptes_baseSystemScript {
 
@@ -55,8 +56,8 @@ public class ptes_genericSystem extends ptes_baseSystemScript {
         TooltipMakerAPI image = tooltip.beginImageWithText(Global.getSector().getFaction(mapData.FactionId).getCrest(), 48);
         image.addPara("This location contains fleets which mimics " + factionAPI.getDisplayName() + ".", pad, factionAPI.getColor(), factionAPI.getDisplayName());
 
-        image.addPara("Power of fleets: " + EnemyFP, pad , Misc.getHighlightColor(), EnemyFP + "");
-        image.addPara("Loot quantity: " + LootPoints, pad , Misc.getHighlightColor(), LootPoints + "");
+        image.addPara("Power of fleets: " + EnemyFP, pad, Misc.getHighlightColor(), EnemyFP + "");
+        image.addPara("Loot quantity: " + LootPoints, pad, Misc.getHighlightColor(), LootPoints + "");
 
         tooltip.addImageWithText(opad);
 
@@ -92,6 +93,7 @@ public class ptes_genericSystem extends ptes_baseSystemScript {
         ptes_refittedProcGen gen = new ptes_refittedProcGen(params);
         gen.initGen(system, Global.getSector(), NEBULA_NONE, mapData.systemType);
         gen.generateSystem();
+        //namer.assignStructuralNames(system,);
     }
 
     void generatePointsOfInterest(StarSystemAPI system) {
@@ -117,7 +119,8 @@ public class ptes_genericSystem extends ptes_baseSystemScript {
             BaseThemeGenerator.EntityLocation placeToSpawn = null;
             while (placeToSpawn == null) {
                 placeToSpawn = validPoints.pick();
-                if (placeToSpawn.orbit == null || placeToSpawn.orbit.getFocus() instanceof CustomCampaignEntityAPI) placeToSpawn = null;
+                if (placeToSpawn.orbit == null || placeToSpawn.orbit.getFocus() instanceof CustomCampaignEntityAPI)
+                    placeToSpawn = null;
             }
             float pointsLeft = LootPoints - pointsSpend;
             ptes_salvageEntity entity;
@@ -137,55 +140,8 @@ public class ptes_genericSystem extends ptes_baseSystemScript {
         }
     }
 
-    void generateFleetParams(){
-        float EnemyFP = this.EnemyFP * faction.FPMulti;
-        int fleetsToSpawn = MathUtils.getRandomNumberInRange(2, 4);
-        fleetsToSpawn += Math.round(EnemyFP / 200f - 0.5f);
-        params = new FleetParamsV3(
-                null, // market
-                new Vector2f(), // location
-                faction.faction, // fleet's faction, if different from above, which is also used for source market picking
-                null,
-                getFleetType(EnemyFP),
-                EnemyFP, // combatPts
-                0f, // freighterPts
-                0f, // tankerPts
-                0f, // transportPts
-                0f, // linerPts
-                0f, // utilityPts
-                200 // qualityBonus
-        );
-
-        params.maxNumShips = 100;
-        params.minShipSize = Math.min(3, Math.round(EnemyFP / 200f - 0.5f));
-        params.ignoreMarketFleetSizeMult = true;
-    }
-
-
 
     void generateFleets(StarSystemAPI system) {
-        float EnemyFP = this.EnemyFP * faction.FPMulti;
-        int fleetsToSpawn = MathUtils.getRandomNumberInRange(2, 4);
-        fleetsToSpawn += Math.round(EnemyFP / 200f - 0.5f);
-        params = new FleetParamsV3(
-                null, // market
-                new Vector2f(), // location
-                faction.faction, // fleet's faction, if different from above, which is also used for source market picking
-                null,
-                getFleetType(EnemyFP),
-                EnemyFP, // combatPts
-                0f, // freighterPts
-                0f, // tankerPts
-                0f, // transportPts
-                0f, // linerPts
-                0f, // utilityPts
-                200 // qualityBonus
-        );
-
-
-        params.maxNumShips = 100;
-        params.minShipSize = Math.min(3, Math.round(EnemyFP / 200f - 0.5f));
-        params.ignoreMarketFleetSizeMult = true;
         /*
         params.officerLevelBonus = Math.round(EnemyFP / 250f - 0.5f);
         params.officerNumberMult = Math.round(EnemyFP / 100f - 0.5f);
@@ -196,19 +152,20 @@ public class ptes_genericSystem extends ptes_baseSystemScript {
          */
         //params.combatPts *= 1 - EnemyFP / 2000f;
 
-        while (fleetsToSpawn > 0){
+        int fleetsSpawned = 0;
+        while (amountOfFleets > fleetsSpawned) {
 
             CampaignFleetAPI fleet = FleetFactoryV3.createFleet(params);
             fleet.getMemoryWithoutUpdate().set("$faction", faction.faction);
             fleet.setFaction("uknown", true);
             system.addEntity(fleet);
 
-            if (entitiesToDefend.size() != 0){
+            if (entitiesToDefend.size() != 0) {
                 SectorEntityToken entity = entitiesToDefend.get(MathUtils.getRandomNumberInRange(0, entitiesToDefend.size() - 1));
                 fleet.setLocation(entity.getLocation().x, entity.getLocation().y);
                 fleet.addAssignment(FleetAssignment.DEFEND_LOCATION, entity, 9999999999f);
                 entitiesToDefend.remove(entity);
-            } else  {
+            } else {
                 fleet.setLocation(MathUtils.getRandomNumberInRange(2000, 5000) * MathUtils.getRandomNumberInRange(-1, 1), MathUtils.getRandomNumberInRange(1000, 5000) * MathUtils.getRandomNumberInRange(-1, 1));
                 fleet.addAssignment(FleetAssignment.PATROL_SYSTEM, system.getCenter(), 9999999999f);
             }
@@ -226,13 +183,7 @@ public class ptes_genericSystem extends ptes_baseSystemScript {
             fleet.getStats().getFleetwideMaxBurnMod().modifyFlat("ptes", 2);
             fleet.getStats().getSensorRangeMod().modifyFlat("ptes", 500);
 
-            fleetsToSpawn--;
+            fleetsSpawned++;
         }
-    }
-
-    public String getFleetType (float FP){
-        if (FP <= 25) return FleetTypes.PATROL_SMALL;
-        else if (FP <= 100) return FleetTypes.PATROL_MEDIUM;
-        else return FleetTypes.PATROL_LARGE;
     }
 }

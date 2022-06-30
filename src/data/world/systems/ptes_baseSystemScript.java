@@ -7,8 +7,6 @@ import com.fs.starfarer.api.campaign.econ.MarketConditionAPI;
 import com.fs.starfarer.api.impl.campaign.fleets.FleetParamsV3;
 import com.fs.starfarer.api.impl.campaign.ids.FleetTypes;
 import com.fs.starfarer.api.impl.campaign.ids.Tags;
-import com.fs.starfarer.api.impl.campaign.procgen.themes.BaseThemeGenerator;
-import com.fs.starfarer.api.impl.campaign.procgen.themes.Themes;
 import data.scripts.items.ptes_mapItemInfo;
 import data.scripts.plugins.ptes_baseEffectPlugin;
 import data.scripts.plugins.ptes_faction;
@@ -16,7 +14,6 @@ import org.lazywizard.lazylib.MathUtils;
 import org.lwjgl.util.vector.Vector2f;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 import static data.scripts.ptes_ModPlugin.FactionMap;
@@ -27,6 +24,8 @@ public class ptes_baseSystemScript {
             EnemyFP,
             LootPoints;
 
+    int amountOfFleets;
+
     ptes_faction faction;
     ptes_mapItemInfo mapData;
     List<ptes_baseEffectPlugin> effects;
@@ -34,7 +33,6 @@ public class ptes_baseSystemScript {
     FleetParamsV3 params;
 
     boolean devMode = Global.getSettings().isDevMode();
-
 
 
     public void generate(SectorAPI sector, SectorEntityToken RiftGate, StarSystemAPI system, InteractionDialogAPI dialog, ptes_mapItemInfo mapData) {
@@ -50,6 +48,7 @@ public class ptes_baseSystemScript {
             //Global.getLogger(ptes_genericSystem.class).info(system.getName());
         } else {
             Global.getLogger(ptes_genericSystem.class).info("found system");
+            system.setName("Map");
             List<SectorEntityToken> cloneList = new ArrayList<>(system.getAllEntities());
             for (SectorEntityToken entity : cloneList) {
                 system.removeEntity(entity);
@@ -67,9 +66,9 @@ public class ptes_baseSystemScript {
         this.effects = mapData.effects;
         faction = FactionMap.get(mapData.FactionId);
 
-
+        generateFleetParams();
         //apply effects before gen
-        for (ptes_baseEffectPlugin effect : effects){
+        for (ptes_baseEffectPlugin effect : effects) {
             effect.beforeGeneration(system, this);
         }
         //generate system
@@ -82,7 +81,7 @@ public class ptes_baseSystemScript {
             jumpPoint.setStandardWormholeToHyperspaceVisual();
         }
         //apply effects after gen
-        for (ptes_baseEffectPlugin effect : effects){
+        for (ptes_baseEffectPlugin effect : effects) {
             effect.afterGeneration(system, this);
         }
 
@@ -101,20 +100,17 @@ public class ptes_baseSystemScript {
         }
     }
 
-    void generateFleetParams(){
-        float EnemyFP = this.EnemyFP * faction.FPMulti;
-        /*
-        int fleetsToSpawn = MathUtils.getRandomNumberInRange(2, 4);
-        fleetsToSpawn += Math.round(EnemyFP / 200f - 0.5f);
+    void generateFleetParams() {
+        amountOfFleets = MathUtils.getRandomNumberInRange(2, 4);
+        amountOfFleets += Math.round(EnemyFP / 200f - 0.5f);
 
-         */
         params = new FleetParamsV3(
                 null, // market
                 new Vector2f(), // location
                 faction.faction, // fleet's faction, if different from above, which is also used for source market picking
                 null,
                 getFleetType(EnemyFP),
-                EnemyFP, // combatPts
+                EnemyFP * faction.FPMulti, // combatPts
                 0f, // freighterPts
                 0f, // tankerPts
                 0f, // transportPts
@@ -123,19 +119,18 @@ public class ptes_baseSystemScript {
                 200 // qualityBonus
         );
 
-
         params.maxNumShips = 100;
         params.minShipSize = Math.min(3, Math.round(EnemyFP / 200f - 0.5f));
         params.ignoreMarketFleetSizeMult = true;
     }
 
-    public String getFleetType (float FP){
+    public String getFleetType(float FP) {
         if (FP <= 25) return FleetTypes.PATROL_SMALL;
         else if (FP <= 100) return FleetTypes.PATROL_MEDIUM;
         else return FleetTypes.PATROL_LARGE;
     }
 
-    public void generateSystem(StarSystemAPI system, InteractionDialogAPI dialog){
+    public void generateSystem(StarSystemAPI system, InteractionDialogAPI dialog) {
 
     }
 }
