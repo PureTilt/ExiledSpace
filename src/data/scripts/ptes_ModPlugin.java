@@ -65,13 +65,27 @@ public class ptes_ModPlugin extends BaseModPlugin {
             for (int i = 0; i < spreadsheet.length(); i++) {
                 JSONObject row = spreadsheet.getJSONObject(i);
                 String id = row.getString("id");
+                String idOverride = row.getString("countsAs");
                 float weight = (float) row.getDouble("weight");
                 float FPMulti = (float) row.getDouble("FPMulti");
                 String genClass = row.getString("effectPlugin");
                 float lootMulti = (float) row.getDouble("lootMulti");
-                ptes_faction New = new ptes_faction(id, weight, FPMulti, classLoader.loadClass(genClass), lootMulti);
+                ptes_faction New = new ptes_faction(id, idOverride, weight, FPMulti, classLoader.loadClass(genClass), lootMulti);
                 weightedFactions.add(New, weight);
                 FactionMap.put(New.faction, New);
+            }
+        } catch (Exception e) {
+            log.error(e);
+        }
+        try {
+            JSONArray spreadsheet = Global.getSettings().getMergedSpreadsheetDataForMod("id", "data/config/ExiledSpace/subFactions.csv", "pt_exiledSpace");
+
+            for (int i = 0; i < spreadsheet.length(); i++) {
+                JSONObject row = spreadsheet.getJSONObject(i);
+                String parentID = row.getString("parentFactionID");
+                String subId = row.getString("subFactionID");
+                float weight = (float) row.getDouble("weight");
+                FactionMap.get(parentID).subFactions.put(subId, weight);
             }
         } catch (Exception e) {
             log.error(e);

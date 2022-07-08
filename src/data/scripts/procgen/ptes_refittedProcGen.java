@@ -75,30 +75,8 @@ public class ptes_refittedProcGen extends StarSystemGenerator{
 //		}
 
 		String uuid = Misc.genUID();
-
-//		String id = "system_" + index;
-//		String name = "System " + index;
-
 		String id = "system_" + uuid;
 		String name = "System " + uuid;
-
-//		String base = constellationName.nameWithRomanSuffixIfAny;
-//		if (constellationName.secondaryWithRomanSuffixIfAny != null) {
-//			base = constellationName.secondaryWithRomanSuffixIfAny;
-//		}
-//		String name = Global.getSettings().getNextGreekLetter(constellationName) + " " + base;
-//		String id = name.toLowerCase();
-
-
-		//if (systemType == StarSystemType.NEBULA) name += " Nebula";
-
-		/*
-		if (!initSystem(name, loc)) {
-			cleanup();
-			return;
-		}
-
-		 */
 
 		star = null;
 		secondary = null;
@@ -107,10 +85,7 @@ public class ptes_refittedProcGen extends StarSystemGenerator{
 
 
 
-		if (!addStars(id)) {
-			cleanup();
-			return;
-		}
+		addStars(id);
 
 //		if (systemType == StarSystemType.NEBULA) {
 //			if (star.getSpec().isBlackHole()) {
@@ -122,12 +97,6 @@ public class ptes_refittedProcGen extends StarSystemGenerator{
 
 		float binaryPad = 1500f;
 
-		float maxOrbitRadius = MAX_ORBIT_RADIUS;
-		if (systemType == StarSystemType.BINARY_FAR ||
-				systemType == StarSystemType.TRINARY_1CLOSE_1FAR ||
-				systemType == StarSystemType.TRINARY_2FAR) {
-			maxOrbitRadius -= FAR_MAX_ORBIT_RADIUS + binaryPad;
-		}
 		GenResult result = addPlanetsAndTerrain(MAX_ORBIT_RADIUS);
 		//addJumpPoints(result);
 		float primaryOrbitalRadius = star.getRadius();
