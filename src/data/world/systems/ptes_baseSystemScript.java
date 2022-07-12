@@ -66,7 +66,7 @@ public class ptes_baseSystemScript {
         this.effects = mapData.effects;
         faction = FactionMap.get(mapData.FactionId);
 
-        generateFleetParams();
+        generateFleetParams(EnemyFP);
         //apply effects before gen
         for (ptes_baseEffectPlugin effect : effects) {
             effect.beforeGeneration(system, this);
@@ -100,7 +100,7 @@ public class ptes_baseSystemScript {
         }
     }
 
-    void generateFleetParams() {
+    void generateFleetParams(float EnemyFP) {
         amountOfFleets = MathUtils.getRandomNumberInRange(2, 4);
         amountOfFleets += Math.round(EnemyFP / 200f - 0.5f);
 

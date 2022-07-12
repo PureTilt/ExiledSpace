@@ -7,25 +7,21 @@ import com.fs.starfarer.api.campaign.rules.MemoryAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.impl.campaign.GateEntityPlugin;
 import com.fs.starfarer.api.impl.campaign.ids.Submarkets;
-import com.fs.starfarer.api.impl.campaign.procgen.StarSystemGenerator;
 import com.fs.starfarer.api.impl.campaign.ui.ptes_giveMapUI;
 import com.fs.starfarer.api.impl.campaign.ui.ptes_mapSelectUI;
+import com.fs.starfarer.api.ui.CustomPanelAPI;
+import com.fs.starfarer.api.ui.LabelAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 import com.fs.starfarer.api.util.Misc.Token;
-import com.fs.starfarer.api.util.WeightedRandomPicker;
-import data.scripts.items.ptes_mapItemInfo;
 import org.apache.log4j.Logger;
 import org.lazywizard.lazylib.MathUtils;
 import org.lwjgl.util.vector.Vector2f;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
-
-import static data.scripts.ptes_ModPlugin.weightedFactions;
 
 public class ptes_riftGateDialog extends BaseCommandPlugin {
 
@@ -105,7 +101,7 @@ public class ptes_riftGateDialog extends BaseCommandPlugin {
         String text3 = "";
         Color highlightColorSup = Misc.getHighlightColor();
         Color highlightColorFuel = Misc.getHighlightColor();
-        if (Global.getSettings().isDevMode()){
+        if (Global.getSettings().isDevMode()) {
             entity.getMemoryWithoutUpdate().expire("$wasMoved", 0);
         } else {
             if (supplies > playerCargo.getSupplies()) {
@@ -114,7 +110,7 @@ public class ptes_riftGateDialog extends BaseCommandPlugin {
                 options.setEnabled("ptes_getInside", false);
                 highlightColorSup = Misc.getNegativeHighlightColor();
             }
-            if (fuel > playerCargo.getFuel()){
+            if (fuel > playerCargo.getFuel()) {
                 text += "\nNot enough fuel.";
                 text3 = "Not enough fuel.";
                 options.setEnabled("ptes_getInside", false);
@@ -124,7 +120,7 @@ public class ptes_riftGateDialog extends BaseCommandPlugin {
         options.setTooltip("ptes_getInside", text);
         options.setTooltipHighlights("ptes_getInside", supplies + "", fuel + "", text2, text3);
         options.setTooltipHighlightColors("ptes_getInside", highlightColorSup, highlightColorFuel, Misc.getNegativeHighlightColor(), Misc.getNegativeHighlightColor());
-        if (entity.getMemoryWithoutUpdate().contains("$wasMoved")){
+        if (entity.getMemoryWithoutUpdate().contains("$wasMoved")) {
             options.setEnabled("ptes_moveGate", false);
             options.setTooltip("ptes_moveGate", "Gate cant be moved for: " + Math.round(entity.getMemoryWithoutUpdate().getExpire("$wasMoved")) + " days");
             options.setTooltipHighlights("ptes_moveGate", Math.round(entity.getMemoryWithoutUpdate().getExpire("$wasMoved")) + "");
@@ -138,19 +134,79 @@ public class ptes_riftGateDialog extends BaseCommandPlugin {
     }
 
     protected void GetInToSystem() {
-        system = Global.getSector().getStarSystem("PoSMap");
-        SectorEntityToken target = system.getJumpPoints().get(MathUtils.getRandomNumberInRange(0, system.getJumpPoints().size() - 1));
-        //SectorEntityToken target = system.getAllEntities().get(0);
-        JumpPointAPI.JumpDestination dest = new JumpPointAPI.JumpDestination(target, "System");
-        Global.getSector().doHyperspaceTransition(playerFleet, entity, dest, 0);
-        Global.getSector().reportFleetJumped(playerFleet, entity, dest);
-        ((GateEntityPlugin) entity.getCustomPlugin()).showBeingUsed(2,30);
+        dialog.showCustomDialog(500, 110, new CustomDialogDelegate() {
+            @Override
+            public void createCustomDialog(CustomPanelAPI panel) {
+                float pad = 3f;
+                float spad = 5f;
+                float opad = 10f;
 
-        if (!Global.getSettings().isDevMode()) {
-            playerCargo.removeSupplies(getSuppliesCost());
-            playerCargo.removeFuel(getFuelCost());
-        }
-        dialog.dismissAsCancel();
+                float width = 500;
+                float height = 110;
+
+                TooltipMakerAPI subPanel = panel.createUIElement(width,height, true);
+                subPanel.setTitleOrbitronLarge();
+                subPanel.setParaOrbitronLarge();
+                subPanel.addTitle("Confirm jump");
+                int supplies = getSuppliesCost();
+                int fuel = getFuelCost();
+                LabelAPI firstPAra = subPanel.addPara("", pad, Misc.getHighlightColor(), supplies + "", fuel + "");
+                firstPAra.getPosition().setYAlignOffset(firstPAra.computeTextHeight(""));
+                subPanel.addPara("Your fleet currently have:\n" + Math.round(playerCargo.getSupplies()) + " Supplies\n" + Math.round(playerCargo.getFuel()) + " Fuel", pad, Misc.getHighlightColor(), Math.round(playerCargo.getSupplies()) + "", Math.round(playerCargo.getFuel()) + "");
+                firstPAra.setText("Jump will consume:\n" + supplies + " Supplies\n" + fuel + " Fuel");
+                firstPAra.setHighlight(supplies + "", fuel + "");
+                firstPAra.getPosition().setYAlignOffset(0);
+                subPanel.getPrev().getPosition().setXAlignOffset(250);
+                subPanel.getPrev().getPosition().setYAlignOffset(firstPAra.computeTextHeight(""));
+                //firstPAra.getPosition().setYAlignOffset(0);
+
+
+                panel.addUIElement(subPanel);
+            }
+
+            @Override
+            public boolean hasCancelButton() {
+                return true;
+            }
+
+            @Override
+            public String getConfirmText() {
+                return null;
+            }
+
+            @Override
+            public String getCancelText() {
+                return null;
+            }
+
+            @Override
+            public void customDialogConfirm() {
+                system = Global.getSector().getStarSystem("PoSMap");
+                SectorEntityToken target = system.getJumpPoints().get(MathUtils.getRandomNumberInRange(0, system.getJumpPoints().size() - 1));
+                //SectorEntityToken target = system.getAllEntities().get(0);
+                JumpPointAPI.JumpDestination dest = new JumpPointAPI.JumpDestination(target, "System");
+                Global.getSector().doHyperspaceTransition(playerFleet, entity, dest, 0);
+                Global.getSector().reportFleetJumped(playerFleet, entity, dest);
+                ((GateEntityPlugin) entity.getCustomPlugin()).showBeingUsed(2, 30);
+
+                if (!Global.getSettings().isDevMode()) {
+                    playerCargo.removeSupplies(getSuppliesCost());
+                    playerCargo.removeFuel(getFuelCost());
+                }
+                dialog.dismissAsCancel();
+            }
+
+            @Override
+            public void customDialogCancel() {
+
+            }
+
+            @Override
+            public CustomUIPanelPlugin getCustomPanelPlugin() {
+                return null;
+            }
+        });
+
     }
 
     protected void GiveMap() {
@@ -166,10 +222,10 @@ public class ptes_riftGateDialog extends BaseCommandPlugin {
          */
     }
 
-    protected void moveGate(){
+    protected void moveGate() {
         ArrayList<SectorEntityToken> destinations = new ArrayList<>();
-        for (StarSystemAPI system : Global.getSector().getStarSystems()){
-            if (system.isEnteredByPlayer()){
+        for (StarSystemAPI system : Global.getSector().getStarSystems()) {
+            if (system.isEnteredByPlayer()) {
                 destinations.add(system.getCenter());
             }
         }
@@ -180,7 +236,7 @@ public class ptes_riftGateDialog extends BaseCommandPlugin {
                     public void pickedEntity(SectorEntityToken entity) {
                         float cost = computeFuelCost(entity);
                         float fuelInStorage = market.getSubmarket(Submarkets.SUBMARKET_STORAGE).getCargo().getFuel();
-                        if (!Global.getSettings().isDevMode()){
+                        if (!Global.getSettings().isDevMode()) {
                             if (cost > fuelInStorage) {
                                 cost -= fuelInStorage;
                                 market.getSubmarket(Submarkets.SUBMARKET_STORAGE).getCargo().removeFuel(fuelInStorage);
@@ -191,9 +247,9 @@ public class ptes_riftGateDialog extends BaseCommandPlugin {
                         }
 
                         SectorEntityToken gate = dialog.getInteractionTarget();
-                        Vector2f rotation = new Vector2f(200f,200f);
-                        rotation = Misc.rotateAroundOrigin(rotation,MathUtils.getRandomNumberInRange(0,360));
-                        gate.setLocation(entity.getStarSystem().getLocation().x + rotation.x,entity.getStarSystem().getLocation().y + rotation.y);
+                        Vector2f rotation = new Vector2f(200f, 200f);
+                        rotation = Misc.rotateAroundOrigin(rotation, MathUtils.getRandomNumberInRange(0, 360));
+                        gate.setLocation(entity.getStarSystem().getLocation().x + rotation.x, entity.getStarSystem().getLocation().y + rotation.y);
                         gate.getMemoryWithoutUpdate().set("$wasMoved", true, 120);
                         system = Global.getSector().getStarSystem("PoSMap");
                         if (system != null) {
@@ -240,15 +296,18 @@ public class ptes_riftGateDialog extends BaseCommandPlugin {
                         info.addToGrid(1, 0, "    Fuel available:", Misc.getWithDGS(available), availableColor);
                         info.addGrid(0);
                     }
+
                     public boolean canConfirmSelection(SectorEntityToken entity) {
                         if (Global.getSettings().isDevMode()) return true;
                         int cost = computeFuelCost(entity);
                         int available = (int) Global.getSector().getPlayerFleet().getCargo().getFuel();
                         return cost <= available;
                     }
+
                     public float getFuelColorAlphaMult() {
                         return 0.5f;
                     }
+
                     public float getFuelRangeMult() { // just for showing it on the map when picking destination
                         return 0f;
                     }
@@ -269,7 +328,7 @@ public class ptes_riftGateDialog extends BaseCommandPlugin {
         for (FleetMemberAPI mem : playerFleet.getMembersWithFightersCopy()) {
             maintPerDay += mem.getStats().getSuppliesPerMonth().getModifiedValue() / 30f;
         }
-        return Math.round(maintPerDay * time * 30f );
+        return Math.round(maintPerDay * time * 30f);
     }
 
     protected int getFuelCost() {

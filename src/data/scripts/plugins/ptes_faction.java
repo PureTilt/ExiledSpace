@@ -13,6 +13,7 @@ public class ptes_faction {
         this.weight = weight;
         this.FPMulti = FPMulti;
         this.lootMulti = lootMulti;
+        this.subFactions.put(id,1f);
         try {
             this.genClass = (ptes_baseSystemScript) genClass.newInstance();
         } catch (InstantiationException | IllegalAccessException e) {
