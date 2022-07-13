@@ -66,7 +66,7 @@ public class ptes_baseSystemScript {
         this.effects = mapData.effects;
         faction = FactionMap.get(mapData.FactionId);
 
-        generateFleetParams(EnemyFP);
+        generateFleetParams(EnemyFP, faction);
         //apply effects before gen
         for (ptes_baseEffectPlugin effect : effects) {
             effect.beforeGeneration(system, this);
@@ -100,7 +100,7 @@ public class ptes_baseSystemScript {
         }
     }
 
-    void generateFleetParams(float EnemyFP) {
+    public FleetParamsV3 generateFleetParams(float EnemyFP, ptes_faction faction) {
         amountOfFleets = MathUtils.getRandomNumberInRange(2, 4);
         amountOfFleets += Math.round(EnemyFP / 200f - 0.5f);
 
@@ -122,6 +122,7 @@ public class ptes_baseSystemScript {
         params.maxNumShips = 100;
         params.minShipSize = Math.min(3, Math.round(EnemyFP / 200f - 0.5f));
         params.ignoreMarketFleetSizeMult = true;
+        return params;
     }
 
     public String getFleetType(float FP) {

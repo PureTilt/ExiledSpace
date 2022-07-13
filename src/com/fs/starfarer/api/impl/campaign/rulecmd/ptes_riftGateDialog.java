@@ -4,6 +4,7 @@ import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.*;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.campaign.rules.MemoryAPI;
+import com.fs.starfarer.api.characters.FullName;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.impl.campaign.GateEntityPlugin;
 import com.fs.starfarer.api.impl.campaign.ids.Submarkets;
@@ -89,7 +90,6 @@ public class ptes_riftGateDialog extends BaseCommandPlugin {
                 moveGate();
                 break;
         }
-
         return true;
     }
 
@@ -130,7 +130,7 @@ public class ptes_riftGateDialog extends BaseCommandPlugin {
 
 
     protected void GenerateSystem() {
-        dialog.showCustomDialog(500, 700, new ptes_mapSelectUI(dialog));
+        dialog.showCustomDialog(1100, 700, new ptes_mapSelectUI(dialog));
     }
 
     protected void GetInToSystem() {
