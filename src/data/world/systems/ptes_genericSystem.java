@@ -158,7 +158,8 @@ public class ptes_genericSystem extends ptes_baseSystemScript {
         while (amountOfFleets > fleetsSpawned) {
 
             CampaignFleetAPI fleet = FleetFactoryV3.createFleet(params);
-            fleet.getMemoryWithoutUpdate().set("$faction", faction.faction);
+            if (faction.factionOverride != null) fleet.getMemoryWithoutUpdate().set("$faction", faction.factionOverride);
+            else fleet.getMemoryWithoutUpdate().set("$faction", faction.faction);
             fleet.setFaction("uknown", true);
             system.addEntity(fleet);
 

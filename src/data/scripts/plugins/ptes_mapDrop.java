@@ -14,6 +14,7 @@ import com.fs.starfarer.api.impl.campaign.DModManager;
 
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import static data.scripts.ptes_ModPlugin.FactionMap;
@@ -50,6 +51,7 @@ public class ptes_mapDrop extends BaseCampaignEventListener {
             FleetFP *= 1f / FactionMap.get(factionID).FPMulti;
             lootMult = FactionMap.get(factionID).lootMulti;
         }
+        int totalMaps = 1;
         for (FleetMemberData member : casualties) {
             if (member.getStatus() == Status.NORMAL) continue;
             float ShipFP = member.getMember().getFleetPointCost();
@@ -72,16 +74,26 @@ public class ptes_mapDrop extends BaseCampaignEventListener {
             loot.addCommodity(commodity,1);
 
              */
+            float chanceMult = (float) Math.pow(0.5f, totalMaps);
             float num = (float) Math.pow(ShipFP, (1/1.2f)) * 0.01f;
             float ran = (float) Math.random();
-            Global.getLogger(ptes_mapDrop.class).info(ShipFP + " " + num + "/" + ran);
-            if (num >= ran) {
+            //Global.getLogger(ptes_mapDrop.class).info(ShipFP + " " + num + "/" + ran);
+            if (num * chanceMult >= ran) {
                 float FP = FleetFP * MathUtils.getRandomNumberInRange(0.9f, 1.1f);
                 Random chance = new Random(member.getMember().getId().hashCode());
                 if (chance.nextFloat() >= 0.66f || !FactionMap.containsKey(factionID)) {
                     factionID = weightedFactions.pick().faction;
                 }
+                if (FactionMap.get(factionID).subFactions.size() > 1){
+                    WeightedRandomPicker<String> subFactionsPicker = new WeightedRandomPicker<>();
+                    for (Map.Entry<String, Float> entry : FactionMap.get(factionID).subFactions.entrySet()){
+                        subFactionsPicker.add(entry.getKey(), entry.getValue());
+                    }
+                    factionID = subFactionsPicker.pick();
+                }
+
                 loot.addSpecial(new ptes_mapItemInfo("pos_map", null, Math.round(FP), Math.round(FP * MathUtils.getRandomNumberInRange(0.75f, 1.25f) * lootMult * (1 - (Dmods * 0.075f))), factionID, picker.pick()), 1);
+                totalMaps++;
             }
         }
         //loot.addCommodity("lobster",1);

@@ -2,6 +2,7 @@ package com.fs.starfarer.api.impl.campaign.ui;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.*;
+import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.impl.campaign.fleets.FleetFactoryV3;
 import com.fs.starfarer.api.impl.campaign.procgen.StarSystemGenerator;
 import com.fs.starfarer.api.input.InputEventAPI;
@@ -198,6 +199,13 @@ public class ptes_mapSelectUI implements CustomDialogDelegate {
                             CampaignFleetAPI fleet = FleetFactoryV3.createFleet(FactionMap.get(map.FactionId).genClass.generateFleetParams(map.FP, FactionMap.get(map.FactionId)));
                             fleetPrev.addShipList(14, 4, 48, Misc.getBasePlayerColor(), fleet.getMembersWithFightersCopy(), 5);
                             fleetPrev.getPrev().getPosition().inTL(5, 30);
+                            float DP = 0;
+                            for (FleetMemberAPI member : fleet.getMembersWithFightersCopy()){
+                                if (!member.isFighterWing()){
+                                    DP += member.getDeploymentPointsCost();
+                                }
+                            }
+                            Global.getLogger(ptes_mapSelectUI.class).info(DP);
                             fleet.despawn();
 
 
@@ -234,7 +242,7 @@ public class ptes_mapSelectUI implements CustomDialogDelegate {
                         }
                     }
                 }
-                if (!atLeastOne) lastActive.setChecked(true);
+                if (!atLeastOne && lastActive != null) lastActive.setChecked(true);
             }
 
             @Override
