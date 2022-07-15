@@ -210,7 +210,7 @@ public class ptes_riftGateDialog extends BaseCommandPlugin {
     }
 
     protected void GiveMap() {
-        dialog.showCustomDialog(500, 700, new ptes_giveMapUI());
+        dialog.showCustomDialog(800, 700, new ptes_giveMapUI());
         /*
         WeightedRandomPicker<StarSystemGenerator.StarSystemType> picker = new WeightedRandomPicker<>();
         picker.addAll(EnumSet.allOf(StarSystemGenerator.StarSystemType.class));

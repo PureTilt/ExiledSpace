@@ -4,30 +4,32 @@ import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CustomDialogDelegate;
 import com.fs.starfarer.api.campaign.CustomUIPanelPlugin;
 import com.fs.starfarer.api.campaign.FactionAPI;
+import com.fs.starfarer.api.impl.campaign.procgen.StarSystemGenerator;
+import com.fs.starfarer.api.input.InputEventAPI;
 import com.fs.starfarer.api.ui.*;
 import com.fs.starfarer.api.util.Misc;
+import com.fs.starfarer.api.util.WeightedRandomPicker;
 import data.scripts.items.ptes_mapItemInfo;
 import data.scripts.items.ptes_mapItemPlugin;
+import data.scripts.plugins.ptes_baseEffectPlugin;
 import data.scripts.plugins.ptes_faction;
+import data.scripts.plugins.ptes_mapEffectEntry;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-import static data.scripts.ptes_ModPlugin.FactionMap;
-import static data.scripts.ptes_ModPlugin.weightedFactions;
+import static data.scripts.ptes_ModPlugin.*;
 
 public class ptes_giveMapUI implements CustomDialogDelegate {
 
     HashMap<ButtonAPI, ptes_faction> buttons = new HashMap<>();
 
-    TextFieldAPI FP;
-    TextFieldAPI LP;
+    TextFieldAPI FP = null;
+    TextFieldAPI LP = null;
 
-    List<ButtonAPI> givemapButtonlist = new ArrayList<>();
     List<TextFieldAPI> textFields = new ArrayList<>();
-    ButtonAPI giveMapButton;
+    ButtonAPI giveMapButton = null;
+
+    HashMap<ButtonAPI, ptes_baseEffectPlugin> effectButtons = new HashMap<>();
 
     public ptes_giveMapUI(){
 
@@ -86,8 +88,38 @@ public class ptes_giveMapUI implements CustomDialogDelegate {
                     doonce = false;
                 }
         }
-
         panel.addUIElement(radioSelectPanel).inTL(0f, 0f);
+
+        TooltipMakerAPI effectsPanel = panel.createUIElement(width,height, true);
+        for (ptes_mapEffectEntry effect : mapEffects){
+
+
+            ButtonAPI button = effectsPanel.addAreaCheckbox("", null, Misc.getBasePlayerColor(), Misc.getDarkPlayerColor(), Misc.getBrightPlayerColor(), 0, 0, 0, true);
+
+            //radioSelectPanel.addToGrid(10,10,factionName,"10");
+
+            TooltipMakerAPI image = effectsPanel.beginImageWithText(effect.iconPath, 64);
+
+            image.addPara(effect.name, Misc.getHighlightColor(), pad);
+            image.addPara(effect.description, pad);
+
+            image.addSpacer(10f);
+
+            effectsPanel.addImageWithText(opad);
+
+            PositionAPI imageWithTextPosition = effectsPanel.getPrev().getPosition();
+
+            float imageWithTextHeight = imageWithTextPosition.getHeight();
+            float imageWithTextWidth = imageWithTextPosition.getWidth();
+            float imageWithTextXOffset = 7f;
+            effectsPanel.addSpacer(spacerHeight);
+            imageWithTextPosition.setXAlignOffset(imageWithTextXOffset);
+            imageWithTextPosition.setSize(imageWithTextWidth, imageWithTextHeight);
+            button.getPosition().setSize(backgroundBoxWidth, imageWithTextHeight + spacerHeight * 2f);
+            imageWithTextPosition.setYAlignOffset(imageWithTextHeight + spacerHeight);
+            effectsPanel.addSpacer(0f).getPosition().setXAlignOffset(-imageWithTextXOffset);
+        }
+        panel.addUIElement(effectsPanel).inTL(0f, 0f);
 
         TooltipMakerAPI numberPanel = panel.createUIElement(100, 50, false);
         numberPanel.addTitle("Fleet Points");
@@ -110,7 +142,6 @@ public class ptes_giveMapUI implements CustomDialogDelegate {
         numberPanel = panel.createUIElement(100, 25, false);
         panel.addUIElement(numberPanel).inTL(380, 100);
         giveMapButton = numberPanel.addAreaCheckbox("Give Map", null, Misc.getBasePlayerColor(), Misc.getDarkPlayerColor(), Misc.getBrightPlayerColor(), 100, 25, 0, true);
-        givemapButtonlist.add(giveMapButton);
         if (giveMapButton == null) Global.getLogger(ptes_giveMapUIPlugin.class).info("button is null");
 
     }
@@ -141,6 +172,69 @@ public class ptes_giveMapUI implements CustomDialogDelegate {
 
     @Override
     public CustomUIPanelPlugin getCustomPanelPlugin() {
-        return new ptes_giveMapUIPlugin(buttons, givemapButtonlist, textFields);
+        return new CustomUIPanelPlugin() {
+        ButtonAPI lastActive = null;
+
+        @Override
+        public void positionChanged(PositionAPI position) {
+
+        }
+
+        @Override
+        public void renderBelow(float alphaMult) {
+
+        }
+
+        @Override
+        public void render(float alphaMult) {
+
+        }
+
+        @Override
+        public void advance(float amount) {
+            boolean atLeastOne = false;
+            for (Map.Entry<ButtonAPI, ptes_faction> pair : buttons.entrySet()){
+                ButtonAPI button = pair.getKey();
+                if (button.isChecked()){
+                    if (!button.equals(lastActive)){
+                        if (lastActive != null) lastActive.setChecked(false);
+                        lastActive = button;
+                        atLeastOne = true;
+                        break;
+                    }
+                }
+            }
+            if (!atLeastOne) lastActive.setChecked(true);
+            if (giveMapButton != null && giveMapButton.isChecked()){
+                try {
+                    giveMapButton.setChecked(false);
+
+                    WeightedRandomPicker<StarSystemGenerator.StarSystemType> picker = new WeightedRandomPicker<>();
+                    picker.addAll(EnumSet.allOf(StarSystemGenerator.StarSystemType.class));
+
+                    String faction = null;
+                    for (Map.Entry<ButtonAPI, ptes_faction> pair : buttons.entrySet()){
+                        ButtonAPI button = pair.getKey();
+                        if (button.isChecked()){
+                            faction = pair.getValue().faction;
+                            break;
+                        }
+                    }
+                    if (faction != null) {
+                        ptes_mapItemInfo map = new ptes_mapItemInfo("pos_map", null, Integer.parseInt(FP.getText()), Integer.parseInt(LP.getText()), faction, picker.pick());
+                        Global.getSector().getPlayerFleet().getCargo().addSpecial(map, 1);
+                    }
+
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        @Override
+        public void processInput(List<InputEventAPI> events) {
+
+        }
+    };
     }
 }

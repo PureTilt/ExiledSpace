@@ -55,7 +55,7 @@ public class ptes_mapItemPlugin extends BaseSpecialItemPlugin {
 
     @Override
     public String getName() {
-        return spec.getName();
+        return spec.getName() + ": " + faction.getDisplayName();
     }
 
     @Override

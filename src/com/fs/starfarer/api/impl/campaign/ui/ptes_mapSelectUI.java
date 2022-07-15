@@ -61,7 +61,7 @@ public class ptes_mapSelectUI implements CustomDialogDelegate {
             if (stack.getPlugin() instanceof ptes_mapItemPlugin) {
                 ptes_mapItemInfo data = (ptes_mapItemInfo) stack.getSpecialDataIfSpecial();
                 ButtonAPI button = UI.addAreaCheckbox("", null, Misc.getBasePlayerColor(), Misc.getDarkPlayerColor(), Misc.getBrightPlayerColor(), 0, 0, 0, true);
-                UI.addTooltipToPrevious(new BackgroundTooltipCreator(data, backgroundBoxWidth),TooltipMakerAPI.TooltipLocation.BELOW);
+                UI.addTooltipToPrevious(new BackgroundTooltipCreator(data, backgroundBoxWidth), TooltipMakerAPI.TooltipLocation.BELOW);
 
                 FactionAPI faction = Global.getSector().getFaction(data.FactionId);
                 String factionName = faction.getDisplayNameWithArticle();
@@ -200,8 +200,8 @@ public class ptes_mapSelectUI implements CustomDialogDelegate {
                             fleetPrev.addShipList(14, 4, 48, Misc.getBasePlayerColor(), fleet.getMembersWithFightersCopy(), 5);
                             fleetPrev.getPrev().getPosition().inTL(5, 30);
                             float DP = 0;
-                            for (FleetMemberAPI member : fleet.getMembersWithFightersCopy()){
-                                if (!member.isFighterWing()){
+                            for (FleetMemberAPI member : fleet.getMembersWithFightersCopy()) {
+                                if (!member.isFighterWing()) {
                                     DP += member.getDeploymentPointsCost();
                                 }
                             }
@@ -210,7 +210,7 @@ public class ptes_mapSelectUI implements CustomDialogDelegate {
 
 
                             //update info pannel
-                            for (UIComponentAPI element : new ArrayList<>(infoPanelElements)){
+                            for (UIComponentAPI element : new ArrayList<>(infoPanelElements)) {
                                 element.getPosition().setYAlignOffset(10000);
                                 infoPanel.removeComponent(element);
                                 mainPanel.removeComponent(element);
@@ -225,7 +225,7 @@ public class ptes_mapSelectUI implements CustomDialogDelegate {
                             image.addPara("Power of fleets: " + map.FP, pad, Misc.getHighlightColor(), map.FP + "");
                             image.addPara("Loot quantity: " + map.LP, pad, Misc.getHighlightColor(), map.LP + "");
                             infoPanel.addImageWithText(pad);
-                            infoPanel.getPrev().getPosition().inTL(10,25);
+                            infoPanel.getPrev().getPosition().inTL(10, 25);
                             infoPanelElements.add(infoPanel.getPrev());
                             elementCount++;
 
@@ -233,7 +233,7 @@ public class ptes_mapSelectUI implements CustomDialogDelegate {
                             image.addPara("System type:", pad);
                             image.addPara(systemTypeNames.get(map.systemType), pad);
                             infoPanel.addImageWithText(pad);
-                            infoPanel.getPrev().getPosition().inTL(10,25 + 69 * elementCount);
+                            infoPanel.getPrev().getPosition().inTL(10, 25 + 69 * elementCount);
                             infoPanelElements.add(infoPanel.getPrev());
                             elementCount++;
 

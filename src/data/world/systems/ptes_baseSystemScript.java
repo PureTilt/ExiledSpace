@@ -20,17 +20,21 @@ import static data.scripts.ptes_ModPlugin.FactionMap;
 
 public class ptes_baseSystemScript {
 
-    float
+    public float
             EnemyFP,
             LootPoints;
 
     int amountOfFleets;
 
-    ptes_faction faction;
-    ptes_mapItemInfo mapData;
+    public List<CampaignFleetAPI> spawnedFleets = new ArrayList<>();
+
+    public ptes_faction faction;
+    public ptes_mapItemInfo mapData;
+
     List<ptes_baseEffectPlugin> effects;
 
-    FleetParamsV3 params;
+
+    public FleetParamsV3 params;
 
     boolean devMode = Global.getSettings().isDevMode();
 

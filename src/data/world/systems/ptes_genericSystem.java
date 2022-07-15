@@ -166,26 +166,30 @@ public class ptes_genericSystem extends ptes_baseSystemScript {
             if (entitiesToDefend.size() != 0) {
                 SectorEntityToken entity = entitiesToDefend.get(MathUtils.getRandomNumberInRange(0, entitiesToDefend.size() - 1));
                 fleet.setLocation(entity.getLocation().x, entity.getLocation().y);
-                fleet.addAssignment(FleetAssignment.DEFEND_LOCATION, entity, 9999999999f);
+                fleet.addAssignment(FleetAssignment.ORBIT_AGGRESSIVE, entity, 99999999f);
                 entitiesToDefend.remove(entity);
             } else {
                 fleet.setLocation(MathUtils.getRandomNumberInRange(2000, 5000) * MathUtils.getRandomNumberInRange(-1, 1), MathUtils.getRandomNumberInRange(1000, 5000) * MathUtils.getRandomNumberInRange(-1, 1));
                 fleet.addAssignment(FleetAssignment.PATROL_SYSTEM, system.getCenter(), 9999999999f);
             }
 
-//          fleet.removeAbility(Abilities.EMERGENCY_BURN);
-            fleet.removeAbility(Abilities.SENSOR_BURST);
+            //fleet.removeAbility(Abilities.EMERGENCY_BURN);
+            //fleet.removeAbility(Abilities.SENSOR_BURST);
             fleet.removeAbility(Abilities.GO_DARK);
-//
+
             // to make sure they attack the player on sight when player's transponder is off
             fleet.getMemoryWithoutUpdate().set(MemFlags.MEMORY_KEY_SAW_PLAYER_WITH_TRANSPONDER_ON, true);
             fleet.getMemoryWithoutUpdate().set(MemFlags.MEMORY_KEY_PATROL_FLEET, true);
             fleet.getMemoryWithoutUpdate().set(MemFlags.MEMORY_KEY_MAKE_ALLOW_DISENGAGE, false);
             fleet.getMemoryWithoutUpdate().set(MemFlags.MEMORY_KEY_NO_JUMP, true);
+            fleet.getMemoryWithoutUpdate().set(MemFlags.MEMORY_KEY_ALLOW_LONG_PURSUIT, false);
+            fleet.getMemoryWithoutUpdate().set(MemFlags.MEMORY_KEY_NEVER_AVOID_PLAYER_SLOWLY, true);
 
+            fleet.setNoAutoDespawn(true);
             fleet.getStats().getFleetwideMaxBurnMod().modifyFlat("ptes", 2);
             fleet.getStats().getSensorRangeMod().modifyFlat("ptes", 500);
 
+            spawnedFleets.add(fleet);
             fleetsSpawned++;
         }
     }

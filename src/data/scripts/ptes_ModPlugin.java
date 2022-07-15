@@ -6,6 +6,7 @@ import com.fs.starfarer.api.campaign.FactionAPI;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.util.WeightedRandomPicker;
 import data.scripts.plugins.ptes_faction;
+import data.scripts.plugins.ptes_mapEffectEntry;
 import data.scripts.plugins.ptes_salvageEntity;
 import data.scripts.plugins.ptes_mapDrop;
 import data.world.ptes_gen;
@@ -23,6 +24,7 @@ public class ptes_ModPlugin extends BaseModPlugin {
     static public WeightedRandomPicker<ptes_faction> weightedFactions = new WeightedRandomPicker<>();
     static public HashMap<String, ptes_faction> FactionMap = new HashMap<>();
     static public List<ptes_salvageEntity> salvageList = new ArrayList<>();
+    static public List<ptes_mapEffectEntry> mapEffects = new ArrayList<>();
 
     static void logger (String text){
         if (DevMode) log.info(text);
@@ -34,6 +36,7 @@ public class ptes_ModPlugin extends BaseModPlugin {
     }
 
     public void onGameLoad(boolean newGame) {
+        Global.getSector().getFaction("uknown").setRelationship("uknown", 100);
     }
 
     @Override
@@ -106,6 +109,25 @@ public class ptes_ModPlugin extends BaseModPlugin {
         } catch (Exception e) {
             log.error(e);
         }
+        mapEffects.clear();
+        try {
+            JSONArray spreadsheet = Global.getSettings().getMergedSpreadsheetDataForMod("id", "data/config/ExiledSpace/PointsOfInterest.csv", "pt_exiledSpace");
+
+            for (int i = 0; i < spreadsheet.length(); i++) {
+                JSONObject row = spreadsheet.getJSONObject(i);
+                String id = row.getString("id");
+                String name = row.getString("name");
+                float cost = (float) row.getDouble("cost");
+                float weight = (float) row.getDouble("weight");
+                String description =  row.getString("description");
+                String iconPath = row.getString("iconPath");
+                String genClass = row.getString("effectPlugin");
+
+                mapEffects.add(new ptes_mapEffectEntry(id, name, cost, weight, description, iconPath, classLoader.loadClass(genClass)));
+            }
+        } catch (Exception e) {
+            log.error(e);
+        }
     }
 
     @Override
@@ -125,9 +147,10 @@ public class ptes_ModPlugin extends BaseModPlugin {
         new ptes_gen().generate(Global.getSector());
         Global.getSector().addListener(new ptes_mapDrop());
         for (FactionAPI faction : Global.getSector().getAllFactions()){
+            if (faction.getId().equals("uknown")) continue;
             faction.setRelationship("uknown", -100);
         }
-        Global.getSector().getFaction("uknown").setRelationship("uknown", 100);
+        //Global.getSector().getFaction("uknown").setRelationship("uknown", 100);
     }
 
     @Override

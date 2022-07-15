@@ -1,0 +1,3 @@
+id,cost,weight,descritpion,icon,effectPlugin
+#unique ID,cost to spawn should corelate with average goodnes of mod can be negative if its bad,spawn weight,descitpion,path to icon,path to script
+ptes_omegaInvasion,50,0.1,,,data.scripts.mapEffects.ptes_omegaIncursion

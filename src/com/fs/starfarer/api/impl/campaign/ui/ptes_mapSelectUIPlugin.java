@@ -52,6 +52,5 @@ public class ptes_mapSelectUIPlugin implements CustomUIPanelPlugin {
 
     @Override
     public void processInput(List<InputEventAPI> events) {
-
     }
 }
