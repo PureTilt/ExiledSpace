@@ -3,6 +3,7 @@ package data.scripts.items;
 import com.fs.starfarer.api.campaign.SpecialItemData;
 import com.fs.starfarer.api.impl.campaign.procgen.StarSystemGenerator;
 import data.scripts.plugins.ptes_baseEffectPlugin;
+import data.scripts.plugins.ptes_mapEffectEntry;
 import org.lazywizard.lazylib.MathUtils;
 import org.lwjgl.util.Color;
 
@@ -16,7 +17,7 @@ public class ptes_mapItemInfo extends SpecialItemData {
             LP;
     public final String FactionId;
     public final StarSystemGenerator.StarSystemType systemType;
-    public List<ptes_baseEffectPlugin> effects = new ArrayList<>();
+    public List<String> effects = new ArrayList<>();
 
     int dopID = MathUtils.getRandomNumberInRange(0, 99999999);
 
@@ -36,7 +37,7 @@ public class ptes_mapItemInfo extends SpecialItemData {
         this.systemType = systemType;
     }
 
-    public ptes_mapItemInfo(String id, String data, int FP, int lootPoints, String factionID, StarSystemGenerator.StarSystemType systemType, List<ptes_baseEffectPlugin> effects) {
+    public ptes_mapItemInfo(String id, String data, int FP, int lootPoints, String factionID, StarSystemGenerator.StarSystemType systemType, List<String> effects) {
         super(id, data);
         this.LP = Math.round(lootPoints);
         this.FP = Math.round(FP);

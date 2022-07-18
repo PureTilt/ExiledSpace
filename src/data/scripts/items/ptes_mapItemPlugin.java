@@ -7,10 +7,15 @@ import com.fs.starfarer.api.campaign.FactionAPI;
 import com.fs.starfarer.api.campaign.impl.items.BaseSpecialItemPlugin;
 import com.fs.starfarer.api.graphics.SpriteAPI;
 import com.fs.starfarer.api.impl.campaign.procgen.StarSystemGenerator;
+import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
+import data.scripts.plugins.ptes_baseEffectPlugin;
+import data.scripts.plugins.ptes_mapEffectEntry;
 
 import java.util.HashMap;
+
+import static data.scripts.ptes_ModPlugin.mapEffectsMap;
 
 public class ptes_mapItemPlugin extends BaseSpecialItemPlugin {
 
@@ -20,6 +25,7 @@ public class ptes_mapItemPlugin extends BaseSpecialItemPlugin {
     String FactionId;
     FactionAPI faction;
     StarSystemGenerator.StarSystemType systemType;
+    ptes_mapItemInfo mapItem;
 
     public static HashMap<StarSystemGenerator.StarSystemType, String> systemTypeIcons = new HashMap<>();
     public static HashMap<StarSystemGenerator.StarSystemType, String> systemTypeNames = new HashMap<>();
@@ -45,12 +51,12 @@ public class ptes_mapItemPlugin extends BaseSpecialItemPlugin {
     @Override
     public void init(CargoStackAPI stack) {
         super.init(stack);
-        ptes_mapItemInfo info = (ptes_mapItemInfo) stack.getSpecialDataIfSpecial();
-        this.FP = Math.round(info.FP);
-        this.LP =  Math.round(info.LP);
-        this.FactionId = info.FactionId;
+        mapItem = (ptes_mapItemInfo) stack.getSpecialDataIfSpecial();
+        this.FP = Math.round(mapItem.FP);
+        this.LP =  Math.round(mapItem.LP);
+        this.FactionId = mapItem.FactionId;
         this.faction = Global.getSector().getFaction(FactionId);
-        this.systemType = info.systemType;
+        this.systemType = mapItem.systemType;
     }
 
     @Override
@@ -83,6 +89,19 @@ public class ptes_mapItemPlugin extends BaseSpecialItemPlugin {
             image.addPara(systemTypeNames.get(systemType), pad);
 
             tooltip.addImageWithText(opad);
+        }
+
+        if (!mapItem.effects.isEmpty()){
+            tooltip.addSectionHeading("Additional effects", Alignment.MID, pad);
+            for (String effectID : mapItem.effects){
+                ptes_mapEffectEntry effect = mapEffectsMap.get(effectID);
+                TooltipMakerAPI effectEntry = tooltip.beginImageWithText(effect.iconPath, 48);
+
+                effectEntry.addPara(effect.name, Misc.getHighlightColor(), pad);
+                effectEntry.addPara(effect.description, pad);
+
+                tooltip.addImageWithText(opad);
+            }
         }
         //tooltip.addPara(systemTypeNames.get(systemType), pad);
     }

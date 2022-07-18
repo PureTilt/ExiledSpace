@@ -24,7 +24,8 @@ public class ptes_ModPlugin extends BaseModPlugin {
     static public WeightedRandomPicker<ptes_faction> weightedFactions = new WeightedRandomPicker<>();
     static public HashMap<String, ptes_faction> FactionMap = new HashMap<>();
     static public List<ptes_salvageEntity> salvageList = new ArrayList<>();
-    static public List<ptes_mapEffectEntry> mapEffects = new ArrayList<>();
+    static public HashMap<String, ptes_mapEffectEntry> mapEffectsMap = new HashMap<>();
+    static public List<String> mapEffects = new ArrayList<>();
 
     static void logger (String text){
         if (DevMode) log.info(text);
@@ -47,7 +48,7 @@ public class ptes_ModPlugin extends BaseModPlugin {
     public void loadData(){
         backGrounds.clear();
         ClassLoader classLoader = Global.getSettings().getScriptClassLoader();
-
+        logger("loading BGs");
         try {
             JSONArray spreadsheet = Global.getSettings().getMergedSpreadsheetDataForMod("name", "data/config/ExiledSpace/backgrounds.csv", "pt_exiledSpace");
 
@@ -60,8 +61,10 @@ public class ptes_ModPlugin extends BaseModPlugin {
         } catch (Exception e) {
             log.error(e);
         }
+        logger("BGs: " + backGrounds.size());
         weightedFactions.clear();
         FactionMap.clear();
+        logger("loading Factions");
         try {
             JSONArray spreadsheet = Global.getSettings().getMergedSpreadsheetDataForMod("id", "data/config/ExiledSpace/factions.csv", "pt_exiledSpace");
 
@@ -80,8 +83,10 @@ public class ptes_ModPlugin extends BaseModPlugin {
         } catch (Exception e) {
             log.error(e);
         }
+        logger("loading subfactions");
+        int subFactionsLoaded = 0;
         try {
-            JSONArray spreadsheet = Global.getSettings().getMergedSpreadsheetDataForMod("id", "data/config/ExiledSpace/subFactions.csv", "pt_exiledSpace");
+            JSONArray spreadsheet = Global.getSettings().getMergedSpreadsheetDataForMod("subFactionID", "data/config/ExiledSpace/subFactions.csv", "pt_exiledSpace");
 
             for (int i = 0; i < spreadsheet.length(); i++) {
                 JSONObject row = spreadsheet.getJSONObject(i);
@@ -89,10 +94,14 @@ public class ptes_ModPlugin extends BaseModPlugin {
                 String subId = row.getString("subFactionID");
                 float weight = (float) row.getDouble("weight");
                 FactionMap.get(parentID).subFactions.put(subId, weight);
+                subFactionsLoaded++;
             }
         } catch (Exception e) {
             log.error(e);
         }
+        logger("Subfcations: " + subFactionsLoaded);
+        logger("Factions: " + FactionMap.size());
+        logger("loading loot");
         salvageList.clear();
         try {
             JSONArray spreadsheet = Global.getSettings().getMergedSpreadsheetDataForMod("id", "data/config/ExiledSpace/PointsOfInterest.csv", "pt_exiledSpace");
@@ -109,9 +118,11 @@ public class ptes_ModPlugin extends BaseModPlugin {
         } catch (Exception e) {
             log.error(e);
         }
+        logger("loot: " + salvageList.size());
+        logger("loading Map Effects");
         mapEffects.clear();
         try {
-            JSONArray spreadsheet = Global.getSettings().getMergedSpreadsheetDataForMod("id", "data/config/ExiledSpace/PointsOfInterest.csv", "pt_exiledSpace");
+            JSONArray spreadsheet = Global.getSettings().getMergedSpreadsheetDataForMod("id", "data/config/ExiledSpace/mapEffects.csv", "pt_exiledSpace");
 
             for (int i = 0; i < spreadsheet.length(); i++) {
                 JSONObject row = spreadsheet.getJSONObject(i);
@@ -120,14 +131,16 @@ public class ptes_ModPlugin extends BaseModPlugin {
                 float cost = (float) row.getDouble("cost");
                 float weight = (float) row.getDouble("weight");
                 String description =  row.getString("description");
-                String iconPath = row.getString("iconPath");
+                String iconPath = row.getString("icon");
                 String genClass = row.getString("effectPlugin");
-
-                mapEffects.add(new ptes_mapEffectEntry(id, name, cost, weight, description, iconPath, classLoader.loadClass(genClass)));
+                //logger(name);
+                mapEffectsMap.put(id, new ptes_mapEffectEntry(id, name, cost, weight, description, iconPath, classLoader.loadClass(genClass)));
+                mapEffects.add(id);
             }
         } catch (Exception e) {
             log.error(e);
         }
+        logger("effects: " + mapEffects.size());
     }
 
     @Override

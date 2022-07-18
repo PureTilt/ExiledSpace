@@ -10,6 +10,7 @@ import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import data.scripts.items.ptes_mapItemInfo;
 import data.scripts.plugins.ptes_baseEffectPlugin;
 import data.scripts.plugins.ptes_faction;
+import data.scripts.plugins.ptes_mapEffectEntry;
 import org.lazywizard.lazylib.MathUtils;
 import org.lwjgl.util.vector.Vector2f;
 
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static data.scripts.ptes_ModPlugin.FactionMap;
+import static data.scripts.ptes_ModPlugin.mapEffectsMap;
 
 public class ptes_baseSystemScript {
 
@@ -31,7 +33,7 @@ public class ptes_baseSystemScript {
     public ptes_faction faction;
     public ptes_mapItemInfo mapData;
 
-    List<ptes_baseEffectPlugin> effects;
+    List<String> effects;
 
 
     public FleetParamsV3 params;
@@ -72,8 +74,8 @@ public class ptes_baseSystemScript {
 
         generateFleetParams(EnemyFP, faction);
         //apply effects before gen
-        for (ptes_baseEffectPlugin effect : effects) {
-            effect.beforeGeneration(system, this);
+        for (String effectID : effects) {
+            mapEffectsMap.get(effectID).effectClass.beforeGeneration(system, this);
         }
         //generate system
         generateSystem(system, dialog);
@@ -85,8 +87,8 @@ public class ptes_baseSystemScript {
             jumpPoint.setStandardWormholeToHyperspaceVisual();
         }
         //apply effects after gen
-        for (ptes_baseEffectPlugin effect : effects) {
-            effect.afterGeneration(system, this);
+        for (String effectID : effects) {
+            mapEffectsMap.get(effectID).effectClass.afterGeneration(system, this);
         }
 
         //set planets to correct survey level

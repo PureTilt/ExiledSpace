@@ -10,6 +10,7 @@ import com.fs.starfarer.api.ui.*;
 import com.fs.starfarer.api.util.Misc;
 import data.scripts.items.ptes_mapItemInfo;
 import data.scripts.items.ptes_mapItemPlugin;
+import data.scripts.plugins.ptes_mapEffectEntry;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,6 +20,7 @@ import java.util.Map;
 import static data.scripts.items.ptes_mapItemPlugin.systemTypeIcons;
 import static data.scripts.items.ptes_mapItemPlugin.systemTypeNames;
 import static data.scripts.ptes_ModPlugin.FactionMap;
+import static data.scripts.ptes_ModPlugin.mapEffectsMap;
 
 public class ptes_mapSelectUI implements CustomDialogDelegate {
 
@@ -236,6 +238,19 @@ public class ptes_mapSelectUI implements CustomDialogDelegate {
                             infoPanel.getPrev().getPosition().inTL(10, 25 + 69 * elementCount);
                             infoPanelElements.add(infoPanel.getPrev());
                             elementCount++;
+
+                            for (String effectID : map.effects){
+                                ptes_mapEffectEntry effect = mapEffectsMap.get(effectID);
+                                TooltipMakerAPI effectEntry = infoPanel.beginImageWithText(effect.iconPath, 48);
+                                effectEntry.addPara(effect.name, Misc.getHighlightColor(), pad);
+                                
+                                effectEntry.addPara(effect.description, pad);
+                                infoPanel.addImageWithText(pad);
+                                infoPanel.getPrev().getPosition().inTL(10, 25 + 69 * elementCount);
+                                infoPanelElements.add(infoPanel.getPrev());
+
+                                elementCount++;
+                            }
 
                             atLeastOne = true;
                             break;

@@ -29,7 +29,7 @@ public class ptes_giveMapUI implements CustomDialogDelegate {
     List<TextFieldAPI> textFields = new ArrayList<>();
     ButtonAPI giveMapButton = null;
 
-    HashMap<ButtonAPI, ptes_baseEffectPlugin> effectButtons = new HashMap<>();
+    HashMap<ButtonAPI, String> effectButtons = new HashMap<>();
 
     public ptes_giveMapUI(){
 
@@ -91,8 +91,8 @@ public class ptes_giveMapUI implements CustomDialogDelegate {
         panel.addUIElement(radioSelectPanel).inTL(0f, 0f);
 
         TooltipMakerAPI effectsPanel = panel.createUIElement(width,height, true);
-        for (ptes_mapEffectEntry effect : mapEffects){
-
+        for (Map.Entry<String, ptes_mapEffectEntry> entry : mapEffectsMap.entrySet()){
+            ptes_mapEffectEntry effect = entry.getValue();
 
             ButtonAPI button = effectsPanel.addAreaCheckbox("", null, Misc.getBasePlayerColor(), Misc.getDarkPlayerColor(), Misc.getBrightPlayerColor(), 0, 0, 0, true);
 
@@ -118,9 +118,12 @@ public class ptes_giveMapUI implements CustomDialogDelegate {
             button.getPosition().setSize(backgroundBoxWidth, imageWithTextHeight + spacerHeight * 2f);
             imageWithTextPosition.setYAlignOffset(imageWithTextHeight + spacerHeight);
             effectsPanel.addSpacer(0f).getPosition().setXAlignOffset(-imageWithTextXOffset);
-        }
-        panel.addUIElement(effectsPanel).inTL(0f, 0f);
 
+            effectButtons.put(button, effect.id);
+        }
+        panel.addUIElement(effectsPanel).inTL(310f, 0f);
+
+        int Xpos = 620;
         TooltipMakerAPI numberPanel = panel.createUIElement(100, 50, false);
         numberPanel.addTitle("Fleet Points");
         TextFieldAPI text = numberPanel.addTextField(100,pad);
@@ -128,7 +131,7 @@ public class ptes_giveMapUI implements CustomDialogDelegate {
         textFields.add(FP);
         text.getTextLabelAPI().setAlignment(Alignment.BR);
         text.setText("100");
-        panel.addUIElement(numberPanel).inTL(380, 0f);
+        panel.addUIElement(numberPanel).inTL(Xpos, 0f);
 
         numberPanel = panel.createUIElement(100, 50, false);
         numberPanel.addTitle("Loot Points");
@@ -137,12 +140,11 @@ public class ptes_giveMapUI implements CustomDialogDelegate {
         textFields.add(LP);
         text.getTextLabelAPI().setAlignment(Alignment.BR);
         text.setText("100");
-        panel.addUIElement(numberPanel).inTL(380, 50f);
+        panel.addUIElement(numberPanel).inTL(Xpos, 50f);
 
         numberPanel = panel.createUIElement(100, 25, false);
-        panel.addUIElement(numberPanel).inTL(380, 100);
+        panel.addUIElement(numberPanel).inTL(Xpos, 100);
         giveMapButton = numberPanel.addAreaCheckbox("Give Map", null, Misc.getBasePlayerColor(), Misc.getDarkPlayerColor(), Misc.getBrightPlayerColor(), 100, 25, 0, true);
-        if (giveMapButton == null) Global.getLogger(ptes_giveMapUIPlugin.class).info("button is null");
 
     }
 
@@ -220,8 +222,16 @@ public class ptes_giveMapUI implements CustomDialogDelegate {
                             break;
                         }
                     }
+
+                    List<String> effects = new ArrayList<>();
+                    for (Map.Entry<ButtonAPI, String> entry : effectButtons.entrySet()){
+                        if (entry.getKey().isChecked()){
+                            effects.add(entry.getValue());
+                        }
+                    }
+
                     if (faction != null) {
-                        ptes_mapItemInfo map = new ptes_mapItemInfo("pos_map", null, Integer.parseInt(FP.getText()), Integer.parseInt(LP.getText()), faction, picker.pick());
+                        ptes_mapItemInfo map = new ptes_mapItemInfo("pos_map", null, Integer.parseInt(FP.getText()), Integer.parseInt(LP.getText()), faction, picker.pick(),effects);
                         Global.getSector().getPlayerFleet().getCargo().addSpecial(map, 1);
                     }
 
