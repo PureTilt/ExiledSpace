@@ -8,9 +8,7 @@ import com.fs.starfarer.api.impl.campaign.fleets.FleetParamsV3;
 import com.fs.starfarer.api.impl.campaign.ids.FleetTypes;
 import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import data.scripts.items.ptes_mapItemInfo;
-import data.scripts.plugins.ptes_baseEffectPlugin;
 import data.scripts.plugins.ptes_faction;
-import data.scripts.plugins.ptes_mapEffectEntry;
 import org.lazywizard.lazylib.MathUtils;
 import org.lwjgl.util.vector.Vector2f;
 
@@ -29,6 +27,7 @@ public class ptes_baseSystemScript {
     int amountOfFleets;
 
     public List<CampaignFleetAPI> spawnedFleets = new ArrayList<>();
+    public List<SectorEntityToken> spawnedLoot = new ArrayList<>();
 
     public ptes_faction faction;
     public ptes_mapItemInfo mapData;
@@ -122,12 +121,15 @@ public class ptes_baseSystemScript {
                 0f, // transportPts
                 0f, // linerPts
                 0f, // utilityPts
-                200 // qualityBonus
+                0 // qualityBonus
         );
 
         params.maxNumShips = 100;
         params.minShipSize = Math.min(3, Math.round(EnemyFP / 200f - 0.5f));
         params.ignoreMarketFleetSizeMult = true;
+        if (faction.quality != null){
+            params.quality = faction.quality;
+        }
         return params;
     }
 

@@ -1,0 +1,2 @@
+id,name,order,tier,reqPoints,reqPointsPerExtraSkill,description,author,combat officer,admiral,admin,tags,icon,
+vic_difficultyDPReduction,Map DP reduction,590,6,6,6,,,,TRUE,,npc_only,graphics/icons/skills/space_ops.png,

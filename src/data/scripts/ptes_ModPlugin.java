@@ -72,11 +72,13 @@ public class ptes_ModPlugin extends BaseModPlugin {
                 JSONObject row = spreadsheet.getJSONObject(i);
                 String id = row.getString("id");
                 String idOverride = row.getString("countsAs");
+                if (idOverride.equals("")) idOverride = null;
                 float weight = (float) row.getDouble("weight");
                 float FPMulti = (float) row.getDouble("FPMulti");
                 String genClass = row.getString("effectPlugin");
                 float lootMulti = (float) row.getDouble("lootMulti");
-                ptes_faction New = new ptes_faction(id, idOverride, weight, FPMulti, classLoader.loadClass(genClass), lootMulti);
+                float quality = (float) row.getDouble("quality");
+                ptes_faction New = new ptes_faction(id, idOverride, weight, FPMulti, classLoader.loadClass(genClass), lootMulti, quality);
                 weightedFactions.add(New, weight);
                 FactionMap.put(New.faction, New);
             }

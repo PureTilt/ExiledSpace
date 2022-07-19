@@ -1,0 +1,16 @@
+{
+	"id":"vic_difficultyDPReduction",
+	"governingAptitude":"leadership",
+	"compressHullmods":false,
+	"scope":CUSTOM,
+	"scopeStr":"all ships",
+	"effectGroups":[
+		{
+			"requiredSkillLevel":1,
+			"effectBasedOnLevel":false,
+			"effects":[
+				{"type":"ALL_SHIPS_IN_FLEET", "script":"data.scripts.skills.vic_difficultyDPReduction"},
+			]
+		},
+	],
+}

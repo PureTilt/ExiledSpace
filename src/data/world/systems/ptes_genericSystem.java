@@ -3,7 +3,6 @@ package data.world.systems;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.*;
 import com.fs.starfarer.api.impl.campaign.fleets.FleetFactoryV3;
-import com.fs.starfarer.api.impl.campaign.fleets.FleetParamsV3;
 import com.fs.starfarer.api.impl.campaign.ids.Abilities;
 import com.fs.starfarer.api.impl.campaign.ids.Factions;
 import com.fs.starfarer.api.impl.campaign.ids.MemFlags;
@@ -13,7 +12,6 @@ import com.fs.starfarer.api.impl.campaign.procgen.themes.BaseThemeGenerator;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 import com.fs.starfarer.api.util.WeightedRandomPicker;
-import data.scripts.plugins.ptes_faction;
 import data.scripts.plugins.ptes_salvageEntity;
 import data.scripts.procgen.ptes_refittedProcGen;
 import data.scripts.ptes_ModPlugin;
@@ -44,7 +42,6 @@ public class ptes_genericSystem extends ptes_baseSystemScript {
         locationsList.put(BaseThemeGenerator.LocationType.JUMP_ORBIT, 0f);
     }
 
-    List<SectorEntityToken> entitiesToDefend = new ArrayList<>();
 
     public void generateSystem(StarSystemAPI system, InteractionDialogAPI dialog) {
         float pad = 3f;
@@ -99,7 +96,7 @@ public class ptes_genericSystem extends ptes_baseSystemScript {
     }
 
     void generatePointsOfInterest(StarSystemAPI system) {
-        entitiesToDefend.clear();
+        spawnedLoot.clear();
         WeightedRandomPicker<ptes_salvageEntity> salvageEntitiesSmall = new WeightedRandomPicker<>();
         WeightedRandomPicker<ptes_salvageEntity> salvageEntitiesBig = new WeightedRandomPicker<>();
         for (ptes_salvageEntity entity : salvageList) {
@@ -135,7 +132,7 @@ public class ptes_genericSystem extends ptes_baseSystemScript {
             Global.getLogger(ptes_genericSystem.class).info(entity.id + " " + entity.cost);
             pointsSpend += entity.cost;
             CustomCampaignEntityAPI spawnedEntity = (CustomCampaignEntityAPI) addSalvageEntity(system, entity.id, Factions.NEUTRAL);
-            if (entity.cost >= 100) entitiesToDefend.add(spawnedEntity);
+            if (entity.cost >= 100) spawnedLoot.add(spawnedEntity);
 
             spawnedEntity.setOrbit(placeToSpawn.orbit);
             spawnedEntity.setCircularOrbitPointingDown(spawnedEntity.getOrbitFocus(), MathUtils.getRandomNumberInRange(0, 360), spawnedEntity.getCircularOrbitRadius(), spawnedEntity.getCircularOrbitPeriod());
@@ -155,19 +152,29 @@ public class ptes_genericSystem extends ptes_baseSystemScript {
         //params.combatPts *= 1 - EnemyFP / 2000f;
 
         int fleetsSpawned = 0;
+        List<SectorEntityToken> pointsToDefend = new ArrayList<>(spawnedLoot);
+
         while (amountOfFleets > fleetsSpawned) {
 
             CampaignFleetAPI fleet = FleetFactoryV3.createFleet(params);
             if (faction.factionOverride != null) fleet.getMemoryWithoutUpdate().set("$faction", faction.factionOverride);
             else fleet.getMemoryWithoutUpdate().set("$faction", faction.faction);
+
+            //TODO: decide on FP threshold
+            float DPreduction = 1f;
+            if (fleet.getFleetPoints() > 500) DPreduction = Math.max(0.5f, Math.min(1, 500f / (fleet.getFleetPoints() - 500f)));
+            if (DPreduction != 1f) {
+                fleet.getMemoryWithoutUpdate().set("$difficultyDPMulty", DPreduction);
+                fleet.getCommander().getStats().setSkillLevel("vic_difficultyDPReduction",1);
+            }
             fleet.setFaction("uknown", true);
             system.addEntity(fleet);
 
-            if (entitiesToDefend.size() != 0) {
-                SectorEntityToken entity = entitiesToDefend.get(MathUtils.getRandomNumberInRange(0, entitiesToDefend.size() - 1));
+            if (pointsToDefend.size() != 0) {
+                SectorEntityToken entity = pointsToDefend.get(MathUtils.getRandomNumberInRange(0, pointsToDefend.size() - 1));
                 fleet.setLocation(entity.getLocation().x, entity.getLocation().y);
                 fleet.addAssignment(FleetAssignment.ORBIT_AGGRESSIVE, entity, 99999999f);
-                entitiesToDefend.remove(entity);
+                pointsToDefend.remove(entity);
             } else {
                 fleet.setLocation(MathUtils.getRandomNumberInRange(2000, 5000) * MathUtils.getRandomNumberInRange(-1, 1), MathUtils.getRandomNumberInRange(1000, 5000) * MathUtils.getRandomNumberInRange(-1, 1));
                 fleet.addAssignment(FleetAssignment.PATROL_SYSTEM, system.getCenter(), 9999999999f);
@@ -188,6 +195,7 @@ public class ptes_genericSystem extends ptes_baseSystemScript {
             fleet.setNoAutoDespawn(true);
             fleet.getStats().getFleetwideMaxBurnMod().modifyFlat("ptes", 2);
             fleet.getStats().getSensorRangeMod().modifyFlat("ptes", 500);
+
 
             spawnedFleets.add(fleet);
             fleetsSpawned++;

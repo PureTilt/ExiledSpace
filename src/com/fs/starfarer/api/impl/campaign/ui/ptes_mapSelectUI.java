@@ -207,7 +207,8 @@ public class ptes_mapSelectUI implements CustomDialogDelegate {
                                     DP += member.getDeploymentPointsCost();
                                 }
                             }
-                            Global.getLogger(ptes_mapSelectUI.class).info(DP);
+                            //Global.getLogger(ptes_mapSelectUI.class).info(DP);
+                            //Global.getLogger(ptes_mapSelectUI.class).info(fleet.getFleetPoints());
                             fleet.despawn();
 
 

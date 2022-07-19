@@ -206,7 +206,7 @@ public class ptes_giveMapUI implements CustomDialogDelegate {
                     }
                 }
             }
-            if (!atLeastOne) lastActive.setChecked(true);
+            if (!atLeastOne && lastActive != null) lastActive.setChecked(true);
             if (giveMapButton != null && giveMapButton.isChecked()){
                 try {
                     giveMapButton.setChecked(false);
