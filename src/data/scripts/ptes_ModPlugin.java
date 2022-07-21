@@ -134,6 +134,7 @@ public class ptes_ModPlugin extends BaseModPlugin {
                 float weight = (float) row.getDouble("weight");
                 String description =  row.getString("description");
                 String iconPath = row.getString("icon");
+                Global.getSettings().loadTexture(iconPath);
                 String genClass = row.getString("effectPlugin");
                 //logger(name);
                 mapEffectsMap.put(id, new ptes_mapEffectEntry(id, name, cost, weight, description, iconPath, classLoader.loadClass(genClass)));

@@ -98,7 +98,7 @@ public class ptes_giveMapUI implements CustomDialogDelegate {
 
             //radioSelectPanel.addToGrid(10,10,factionName,"10");
 
-            TooltipMakerAPI image = effectsPanel.beginImageWithText(effect.iconPath, 64);
+            TooltipMakerAPI image = effectsPanel.beginImageWithText(effect.iconPath, 48);
 
             image.addPara(effect.name, Misc.getHighlightColor(), pad);
             image.addPara(effect.description, pad);

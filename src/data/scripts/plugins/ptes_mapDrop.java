@@ -12,13 +12,9 @@ import data.scripts.items.ptes_mapItemInfo;
 import org.lazywizard.lazylib.MathUtils;
 import com.fs.starfarer.api.impl.campaign.DModManager;
 
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
-import static data.scripts.ptes_ModPlugin.FactionMap;
-import static data.scripts.ptes_ModPlugin.weightedFactions;
+import static data.scripts.ptes_ModPlugin.*;
 
 public class ptes_mapDrop extends BaseCampaignEventListener {
 
@@ -52,26 +48,20 @@ public class ptes_mapDrop extends BaseCampaignEventListener {
             lootMult = FactionMap.get(factionID).lootMulti;
         }
         int totalMaps = 1;
+
+        WeightedRandomPicker<String> weightedEffects = new WeightedRandomPicker<>();
+        for (Map.Entry<String, ptes_mapEffectEntry> entry : mapEffectsMap.entrySet()){
+            weightedEffects.add(entry.getKey(), entry.getValue().weight);
+        }
+
         for (FleetMemberData member : casualties) {
             if (member.getStatus() == Status.NORMAL) continue;
             float ShipFP = member.getMember().getFleetPointCost();
-            int Dmods = DModManager.getNumDMods(member.getMember().getVariant());
-            int officerLevel = 0;
-            for (MutableCharacterStatsAPI.SkillLevelAPI skill : member.getMember().getCaptain().getStats().getSkillsCopy()){
-                officerLevel += skill.getLevel();
-            }
             //Global.getLogger(ptes_mapDrop.class).info("Enemy lost: " + member.getMember().getVariant().getFullDesignationWithHullName() + "" + ShipFP);
 
             // officers as prisoners
             //PersonAPI captain = member.getMember().getCaptain();
             /*
-            String commodity = "survey_data_1";
-            if (FleetFP <= 25) commodity = "survey_data";
-            else if (FleetFP <= 50) commodity = "survey_data_2";
-            else if (FleetFP <= 75) commodity = "survey_data_3";
-            else if (FleetFP <= 100) commodity = "survey_data_4";
-            else commodity = "survey_data_5";
-            loot.addCommodity(commodity,1);
 
              */
             float chanceMult = (float) Math.pow(0.5f, totalMaps);
@@ -79,6 +69,30 @@ public class ptes_mapDrop extends BaseCampaignEventListener {
             float ran = (float) Math.random();
             //Global.getLogger(ptes_mapDrop.class).info(ShipFP + " " + num + "/" + ran);
             if (num * chanceMult >= ran) {
+                int DMods = DModManager.getNumDMods(member.getMember().getVariant());
+                int officerLevel = 0;
+                for (MutableCharacterStatsAPI.SkillLevelAPI skill : member.getMember().getCaptain().getStats().getSkillsCopy()){
+                    officerLevel += skill.getLevel();
+                }
+                int SMods = member.getMember().getVariant().getSMods().size();
+                List<String> mapEffects = new ArrayList<>();
+                for (int i = 0; i < officerLevel; i ++){
+                    if (Math.random() >= 0.9f){
+                        String effect = weightedEffects.pick();
+                        mapEffects.add(effect);
+                        weightedEffects.remove(effect);
+                        break;
+                    }
+                }
+                for (int i = 0; i < SMods; i ++){
+                    if (Math.random() >= 0.8f){
+                        String effect = weightedEffects.pick();
+                        mapEffects.add(effect);
+                        weightedEffects.remove(effect);
+                        break;
+                    }
+                }
+
                 float FP = FleetFP * MathUtils.getRandomNumberInRange(0.9f, 1.1f);
                 Random chance = new Random(member.getMember().getId().hashCode());
                 if (chance.nextFloat() >= 0.66f || !FactionMap.containsKey(factionID)) {
@@ -92,7 +106,7 @@ public class ptes_mapDrop extends BaseCampaignEventListener {
                     factionID = subFactionsPicker.pick();
                 }
 
-                loot.addSpecial(new ptes_mapItemInfo("pos_map", null, Math.round(FP), Math.round(FP * MathUtils.getRandomNumberInRange(0.75f, 1.25f) * lootMult * (1 - (Dmods * 0.075f))), factionID, picker.pick()), 1);
+                loot.addSpecial(new ptes_mapItemInfo("pos_map", null, Math.round(FP), Math.round(FP * MathUtils.getRandomNumberInRange(0.75f, 1.25f) * lootMult * (1 - (DMods * 0.075f))), factionID, picker.pick(), mapEffects), 1);
                 totalMaps++;
             }
         }

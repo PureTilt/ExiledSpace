@@ -16,6 +16,7 @@ import data.scripts.plugins.ptes_salvageEntity;
 import data.scripts.procgen.ptes_refittedProcGen;
 import data.scripts.ptes_ModPlugin;
 import org.lazywizard.lazylib.MathUtils;
+import data.scripts.plugins.ptes_DPRReductionCalc;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -161,8 +162,7 @@ public class ptes_genericSystem extends ptes_baseSystemScript {
             else fleet.getMemoryWithoutUpdate().set("$faction", faction.faction);
 
             //TODO: decide on FP threshold
-            float DPreduction = 1f;
-            if (fleet.getFleetPoints() > 500) DPreduction = Math.max(0.5f, Math.min(1, 500f / (fleet.getFleetPoints() - 500f)));
+            float DPreduction = ptes_DPRReductionCalc.DPRReduction(fleet.getFleetPoints());
             if (DPreduction != 1f) {
                 fleet.getMemoryWithoutUpdate().set("$difficultyDPMulty", DPreduction);
                 fleet.getCommander().getStats().setSkillLevel("vic_difficultyDPReduction",1);
