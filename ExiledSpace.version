@@ -1,7 +1,7 @@
 {
-    "masterVersionFile":"https://github.com/PureTilt/ExiledSpace/blob/master/ExiledSpace.version",
+    "masterVersionFile":"https://raw.githubusercontent.com/PureTilt/ExiledSpace/master/ExiledSpace.version",
     "modName":"ExiledSpace",
-    #"modThreadId":18994,
+    "modThreadId":18994,
     "modVersion":
     {
         "major":0,
