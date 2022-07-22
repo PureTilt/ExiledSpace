@@ -11,7 +11,7 @@ public class vic_difficultyDPReduction implements ShipSkillEffect {
     @Override
     public void apply(MutableShipStatsAPI stats, ShipAPI.HullSize hullSize, String id, float level) {
         float DPMulty = 1;
-        if (stats.getFleetMember().getFleetData().getFleet().getMemoryWithoutUpdate().contains("$difficultyDPMulty")){
+        if (stats.getFleetMember().getFleetData() != null && stats.getFleetMember().getFleetData().getFleet().getMemoryWithoutUpdate().contains("$difficultyDPMulty")){
             DPMulty = (float) stats.getFleetMember().getFleetData().getFleet().getMemoryWithoutUpdate().get("$difficultyDPMulty");
         }
 

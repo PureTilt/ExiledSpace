@@ -110,21 +110,5 @@ public class ptes_mapDrop extends BaseCampaignEventListener {
                 totalMaps++;
             }
         }
-        //loot.addCommodity("lobster",1);
     }
-
-    /*
-    public static ptes_mapDrop create()
-    {
-        ptes_mapDrop manager = getManager();
-        if (manager != null)
-            return manager;
-
-        Map<String, Object> data = Global.getSector().getPersistentData();
-        manager = new ptes_mapDrop();
-        data.put(MANAGER_MAP_KEY, manager);
-        return manager;
-    }
-
-     */
 }

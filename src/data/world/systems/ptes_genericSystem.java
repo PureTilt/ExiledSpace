@@ -163,10 +163,10 @@ public class ptes_genericSystem extends ptes_baseSystemScript {
 
             //TODO: decide on FP threshold
             float DPreduction = ptes_DPRReductionCalc.DPRReduction(fleet.getFleetPoints());
-            if (DPreduction != 1f) {
+            //if (DPreduction != 1f) {
                 fleet.getMemoryWithoutUpdate().set("$difficultyDPMulty", DPreduction);
                 fleet.getCommander().getStats().setSkillLevel("vic_difficultyDPReduction",1);
-            }
+            //}
             fleet.setFaction("uknown", true);
             system.addEntity(fleet);
 

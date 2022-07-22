@@ -127,18 +127,22 @@ public class ptes_ModPlugin extends BaseModPlugin {
             JSONArray spreadsheet = Global.getSettings().getMergedSpreadsheetDataForMod("id", "data/config/ExiledSpace/mapEffects.csv", "pt_exiledSpace");
 
             for (int i = 0; i < spreadsheet.length(); i++) {
-                JSONObject row = spreadsheet.getJSONObject(i);
-                String id = row.getString("id");
-                String name = row.getString("name");
-                float cost = (float) row.getDouble("cost");
-                float weight = (float) row.getDouble("weight");
-                String description =  row.getString("description");
-                String iconPath = row.getString("icon");
-                Global.getSettings().loadTexture(iconPath);
-                String genClass = row.getString("effectPlugin");
-                //logger(name);
-                mapEffectsMap.put(id, new ptes_mapEffectEntry(id, name, cost, weight, description, iconPath, classLoader.loadClass(genClass)));
-                mapEffects.add(id);
+                try {
+                    JSONObject row = spreadsheet.getJSONObject(i);
+                    String id = row.getString("id");
+                    String name = row.getString("name");
+                    float cost = (float) row.getDouble("cost");
+                    float weight = (float) row.getDouble("weight");
+                    String description =  row.getString("description");
+                    String iconPath = row.getString("icon");
+                    Global.getSettings().loadTexture(iconPath);
+                    String genClass = row.getString("effectPlugin");
+                    //logger(name);
+                    mapEffectsMap.put(id, new ptes_mapEffectEntry(id, name, cost, weight, description, iconPath, classLoader.loadClass(genClass)));
+                    mapEffects.add(id);
+                } catch (Exception e) {
+                    log.error(e);
+                }
             }
         } catch (Exception e) {
             log.error(e);
