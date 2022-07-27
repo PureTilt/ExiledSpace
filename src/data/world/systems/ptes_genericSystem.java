@@ -163,10 +163,10 @@ public class ptes_genericSystem extends ptes_baseSystemScript {
 
             //TODO: decide on FP threshold
             float DPreduction = ptes_DPRReductionCalc.DPRReduction(fleet.getFleetPoints());
-            //if (DPreduction != 1f) {
+            if (DPreduction != 1f) {
                 fleet.getMemoryWithoutUpdate().set("$difficultyDPMulty", DPreduction);
                 fleet.getCommander().getStats().setSkillLevel("vic_difficultyDPReduction",1);
-            //}
+            }
             fleet.setFaction("uknown", true);
             system.addEntity(fleet);
 
@@ -176,7 +176,7 @@ public class ptes_genericSystem extends ptes_baseSystemScript {
                 fleet.addAssignment(FleetAssignment.ORBIT_AGGRESSIVE, entity, 99999999f);
                 pointsToDefend.remove(entity);
             } else {
-                fleet.setLocation(MathUtils.getRandomNumberInRange(2000, 5000) * MathUtils.getRandomNumberInRange(-1, 1), MathUtils.getRandomNumberInRange(1000, 5000) * MathUtils.getRandomNumberInRange(-1, 1));
+                fleet.setLocation(MathUtils.getRandomNumberInRange(3000, 5000) * MathUtils.getRandomNumberInRange(-1, 1), MathUtils.getRandomNumberInRange(3000, 5000) * MathUtils.getRandomNumberInRange(-1, 1));
                 fleet.addAssignment(FleetAssignment.PATROL_SYSTEM, system.getCenter(), 9999999999f);
             }
 

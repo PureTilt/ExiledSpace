@@ -123,7 +123,8 @@ public class ptes_baseSystemScript {
                 0f, // utilityPts
                 0 // qualityBonus
         );
-
+        params.officerLevelLimit = 5;
+        params.commanderLevelLimit = 7;
         params.maxNumShips = 100;
         params.minShipSize = Math.min(3, Math.round(EnemyFP / 200f - 0.5f));
         params.ignoreMarketFleetSizeMult = true;
