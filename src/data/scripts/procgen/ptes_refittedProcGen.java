@@ -92,7 +92,6 @@ public class ptes_refittedProcGen extends StarSystemGenerator{
 //				System.out.println("wefwefew");
 //			}
 //		}
-
 		updateAgeAfterPickingStar();
 
 		float binaryPad = 1500f;

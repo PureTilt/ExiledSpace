@@ -2,6 +2,7 @@ package data.world.systems;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.*;
+import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.impl.campaign.fleets.FleetFactoryV3;
 import com.fs.starfarer.api.impl.campaign.ids.Abilities;
 import com.fs.starfarer.api.impl.campaign.ids.Factions;
@@ -161,12 +162,15 @@ public class ptes_genericSystem extends ptes_baseSystemScript {
             if (faction.factionOverride != null) fleet.getMemoryWithoutUpdate().set("$faction", faction.factionOverride);
             else fleet.getMemoryWithoutUpdate().set("$faction", faction.faction);
 
+            fleet.getMemoryWithoutUpdate().set("$fleetFP", fleet.getFleetPoints());
+
             //TODO: decide on FP threshold
             float DPreduction = ptes_DPRReductionCalc.DPRReduction(fleet.getFleetPoints());
             if (DPreduction != 1f) {
                 fleet.getMemoryWithoutUpdate().set("$difficultyDPMulty", DPreduction);
                 fleet.getCommander().getStats().setSkillLevel("vic_difficultyDPReduction",1);
             }
+
             fleet.setFaction("uknown", true);
             system.addEntity(fleet);
 

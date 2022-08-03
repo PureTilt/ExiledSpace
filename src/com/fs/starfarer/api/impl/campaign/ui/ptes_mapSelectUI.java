@@ -151,6 +151,7 @@ public class ptes_mapSelectUI implements CustomDialogDelegate {
 
         FactionMap.get(((ptes_mapItemInfo) active.getValue().getData()).FactionId).genClass.generate(Global.getSector(), dialog.getInteractionTarget(), Global.getSector().getStarSystem("PoSMap"), dialog, (ptes_mapItemInfo) active.getValue().getData());
         Global.getSector().getPlayerFleet().getCargo().removeStack(active.getValue());
+
     }
 
     @Override

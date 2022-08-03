@@ -323,12 +323,13 @@ public class ptes_riftGateDialog extends BaseCommandPlugin {
 
     protected int getSuppliesCost() {
         float burn = playerFleet.getFleetData().getMinBurnLevel() + playerFleet.getStats().getFleetwideMaxBurnMod().flatBonus;
-        float time = 30f / burn;
+        float time = 30f / (burn * 0.1f);
         float maintPerDay = 0;
         for (FleetMemberAPI mem : playerFleet.getMembersWithFightersCopy()) {
+            if (mem.isMothballed()) continue;
             maintPerDay += mem.getStats().getSuppliesPerMonth().getModifiedValue() / 30f;
         }
-        return Math.round(maintPerDay * time * 30f);
+        return Math.round(maintPerDay * time);
     }
 
     protected int getFuelCost() {
