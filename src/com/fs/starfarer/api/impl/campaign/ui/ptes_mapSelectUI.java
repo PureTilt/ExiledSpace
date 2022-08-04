@@ -118,7 +118,6 @@ public class ptes_mapSelectUI implements CustomDialogDelegate {
         //fleetPrev.addShipList(7,5,57,Misc.getBasePlayerColor(),Global.getSector().getPlayerFleet().getMembersWithFightersCopy(), pad);
 
         panel.addUIElement(fleetPrev).inBL(414, 0f);
-
     }
 
     @Override
@@ -150,8 +149,9 @@ public class ptes_mapSelectUI implements CustomDialogDelegate {
 
 
         FactionMap.get(((ptes_mapItemInfo) active.getValue().getData()).FactionId).genClass.generate(Global.getSector(), dialog.getInteractionTarget(), Global.getSector().getStarSystem("PoSMap"), dialog, (ptes_mapItemInfo) active.getValue().getData());
+        dialog.getInteractionTarget().getMemory().set("$activeMap", active.getValue().getData());
+        dialog.getInteractionTarget().getMemory().set("$mapVisited", false);
         Global.getSector().getPlayerFleet().getCargo().removeStack(active.getValue());
-
     }
 
     @Override

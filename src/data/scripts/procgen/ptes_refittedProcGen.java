@@ -192,14 +192,7 @@ public class ptes_refittedProcGen extends StarSystemGenerator{
 			if (!nebulaStatusOk) continue;
 
 			float weight = 1;
-			float random = (float) Math.random();
-			if (random <= 0.33f){
-				weight *= data.getFreqAVERAGE();
-			} else if (random <= 0.66f){
-				weight *= data.getFreqOLD();
-			} else {
-				weight *= data.getFreqYOUNG();
-			}
+			if (data.getFreqAVERAGE() + data.getFreqOLD() + data.getFreqYOUNG() == 0) continue;
 			if (spec.isBlackHole() || spec.isPulsar()) weight *= 0.25f;
 			picker.add(spec, weight);
 		}

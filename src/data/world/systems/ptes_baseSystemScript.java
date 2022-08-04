@@ -129,7 +129,7 @@ public class ptes_baseSystemScript {
         params.minShipSize = Math.min(3, Math.round(EnemyFP / 200f - 0.5f));
         params.ignoreMarketFleetSizeMult = true;
         if (faction.quality != null){
-            params.quality = faction.quality;
+            params.qualityOverride = faction.quality;
         }
         return params;
     }

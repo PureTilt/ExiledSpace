@@ -10,11 +10,14 @@ import com.fs.starfarer.api.impl.campaign.GateEntityPlugin;
 import com.fs.starfarer.api.impl.campaign.ids.Submarkets;
 import com.fs.starfarer.api.impl.campaign.ui.ptes_giveMapUI;
 import com.fs.starfarer.api.impl.campaign.ui.ptes_mapSelectUI;
+import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.CustomPanelAPI;
 import com.fs.starfarer.api.ui.LabelAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 import com.fs.starfarer.api.util.Misc.Token;
+import data.scripts.items.ptes_mapItemInfo;
+import data.scripts.plugins.ptes_mapEffectEntry;
 import org.apache.log4j.Logger;
 import org.lazywizard.lazylib.MathUtils;
 import org.lwjgl.util.vector.Vector2f;
@@ -23,6 +26,10 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import static data.scripts.items.ptes_mapItemPlugin.systemTypeIcons;
+import static data.scripts.items.ptes_mapItemPlugin.systemTypeNames;
+import static data.scripts.ptes_ModPlugin.mapEffectsMap;
 
 public class ptes_riftGateDialog extends BaseCommandPlugin {
 
@@ -134,7 +141,7 @@ public class ptes_riftGateDialog extends BaseCommandPlugin {
     }
 
     protected void GetInToSystem() {
-        dialog.showCustomDialog(500, 110, new CustomDialogDelegate() {
+        dialog.showCustomDialog(500, 400, new CustomDialogDelegate() {
             @Override
             public void createCustomDialog(CustomPanelAPI panel) {
                 float pad = 3f;
@@ -142,12 +149,55 @@ public class ptes_riftGateDialog extends BaseCommandPlugin {
                 float opad = 10f;
 
                 float width = 500;
-                float height = 110;
+                float height = 400;
 
                 TooltipMakerAPI subPanel = panel.createUIElement(width,height, true);
                 subPanel.setTitleOrbitronLarge();
                 subPanel.setParaOrbitronLarge();
-                subPanel.addTitle("Confirm jump");
+                if (dialog.getInteractionTarget().getMemory().contains("$mapVisited") && (boolean) dialog.getInteractionTarget().getMemory().get("$mapVisited")){
+                    subPanel.addTitle("Confirm jump (location was already visited)");
+                } else {
+                    subPanel.addTitle("Confirm jump");
+                }
+
+                ptes_mapItemInfo activeMap = (ptes_mapItemInfo) entity.getMemory().get("$activeMap");
+
+                FactionAPI faction = Global.getSector().getFaction(activeMap.FactionId);
+                String factionName =  faction.getDisplayNameWithArticle();
+
+                TooltipMakerAPI image = subPanel.beginImageWithText(faction.getCrest(), 48);
+                image.addPara("This location contains fleets which mimics " + factionName + ".", pad, faction.getColor(), factionName);
+
+                image.addPara("Power of fleets: " + activeMap.FP, pad , Misc.getHighlightColor(), activeMap.FP + "");
+                image.addPara("Loot quantity: " + activeMap.LP, pad , Misc.getHighlightColor(), activeMap.LP + "");
+
+                subPanel.addImageWithText(opad);
+
+
+                if (activeMap.systemType != null){
+                    image = subPanel.beginImageWithText(systemTypeIcons.get(activeMap.systemType), 48);
+                    image.addPara("System type:", pad);
+                    image.addPara(systemTypeNames.get(activeMap.systemType), pad);
+
+                    subPanel.addImageWithText(opad);
+                }
+
+                if (!activeMap.effects.isEmpty()){
+                    subPanel.addSectionHeading("Additional effects", Alignment.MID, pad);
+                    for (String effectID : activeMap.effects){
+                        ptes_mapEffectEntry effect = mapEffectsMap.get(effectID);
+                        TooltipMakerAPI effectEntry = subPanel.beginImageWithText(effect.iconPath, 48);
+
+                        effectEntry.addPara(effect.name, Misc.getHighlightColor(), pad);
+                        effectEntry.addPara(effect.description, pad);
+
+                        subPanel.addImageWithText(opad);
+                    }
+                }
+
+                subPanel.addSectionHeading("Jump cost", Alignment.MID, opad);
+                subPanel.addSpacer(spad);
+
                 int supplies = getSuppliesCost();
                 int fuel = getFuelCost();
                 LabelAPI firstPAra = subPanel.addPara("", pad, Misc.getHighlightColor(), supplies + "", fuel + "");
@@ -193,6 +243,8 @@ public class ptes_riftGateDialog extends BaseCommandPlugin {
                     playerCargo.removeSupplies(getSuppliesCost());
                     playerCargo.removeFuel(getFuelCost());
                 }
+
+                dialog.getInteractionTarget().getMemory().set("$mapVisited", true);
                 dialog.dismissAsCancel();
             }
 

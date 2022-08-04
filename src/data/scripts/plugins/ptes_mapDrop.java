@@ -54,7 +54,7 @@ public class ptes_mapDrop extends BaseCampaignEventListener {
             lootMult = FactionMap.get(factionID).lootMulti;
         }
 
-        if (FleetFP < 150) return;
+        if (FleetFP < 100) return;
         int totalMaps = 0;
 
         WeightedRandomPicker<String> weightedEffects = new WeightedRandomPicker<>();
