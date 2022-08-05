@@ -5,7 +5,7 @@ import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.impl.campaign.ids.Stats;
 
-public class vic_difficultyDPReduction implements ShipSkillEffect {
+public class ptes_difficultyDPReduction implements ShipSkillEffect {
 
 
     @Override

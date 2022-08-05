@@ -171,7 +171,7 @@ public class ptes_genericSystem extends ptes_baseSystemScript {
                 fleet.getCommander().getStats().setSkillLevel("vic_difficultyDPReduction",1);
             }
 
-            fleet.setFaction("uknown", true);
+            fleet.setFaction("unknown", true);
             system.addEntity(fleet);
 
             if (pointsToDefend.size() != 0) {

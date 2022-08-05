@@ -37,7 +37,7 @@ public class ptes_ModPlugin extends BaseModPlugin {
     }
 
     public void onGameLoad(boolean newGame) {
-        Global.getSector().getFaction("uknown").setRelationship("uknown", 100);
+        //Global.getSector().getFaction("unknown").setRelationship("uknown", 100);
     }
 
     @Override
@@ -167,10 +167,10 @@ public class ptes_ModPlugin extends BaseModPlugin {
         new ptes_gen().generate(Global.getSector());
         Global.getSector().addListener(new ptes_mapDrop());
         for (FactionAPI faction : Global.getSector().getAllFactions()){
-            if (faction.getId().equals("uknown")) continue;
-            faction.setRelationship("uknown", -100);
+            if (faction.getId().equals("unknown")) continue;
+            faction.setRelationship("unknown", -100);
         }
-        //Global.getSector().getFaction("uknown").setRelationship("uknown", 100);
+        //Global.getSector().getFaction("unknown").setRelationship("uknown", 100);
     }
 
     @Override

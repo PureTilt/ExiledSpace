@@ -9,7 +9,7 @@
 			"requiredSkillLevel":1,
 			"effectBasedOnLevel":false,
 			"effects":[
-				{"type":"ALL_SHIPS_IN_FLEET", "script":"data.scripts.skills.vic_difficultyDPReduction"},
+				{"type":"ALL_SHIPS_IN_FLEET", "script":"data.scripts.skills.ptes_difficultyDPReduction"},
 			]
 		},
 	],

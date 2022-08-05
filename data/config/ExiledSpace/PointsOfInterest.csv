@@ -11,11 +11,11 @@ weapons_cache_small,12,9,
 weapons_cache_small_remnant,17,5,
 weapons_cache_small_low,10,8,
 weapons_cache_small_high,12,7,
-equipment_cache_small,10,10,"omega,remnant"
+equipment_cache_small,10,10,
 alpha_site_weapons_cache,75,3,omega
-station_research_remnant,250,15,remnant
-station_mining_remnant,175,21,remnant
-orbital_habitat_remnant,125,30,remnant
+station_research_remnant,250,20,remnant
+station_mining_remnant,175,28,remnant
+orbital_habitat_remnant,125,40,remnant
 station_research,200,5,
 station_mining,150,7,
 orbital_habitat,100,10,

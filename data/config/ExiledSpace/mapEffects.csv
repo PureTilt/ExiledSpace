@@ -6,3 +6,4 @@ ptes_qualityProduction,Quality Production,50,1,Increases fleet ship quality by 2
 ptes_bestOfTheBest,Best of The Best,50,1,Increases average amount of Smods in fleet by 2.,graphics/icons/markets/arms_tradeshow.png,data.scripts.mapEffects.ptes_bestOfTheBest
 ptes_recruitmentProgram,Recruitment Program,50,1,Increases ammount of officers by 50% and officer level by 2.,graphics/icons/skills/command_experience.png,data.scripts.mapEffects.ptes_recruitmentProgram
 ptes_stealthFleets,Stealth Fleets,50,1,Reduses sensor profile of fleets by 50%.,graphics/icons/abilities/go_dark.png,data.scripts.mapEffects.ptes_stealthFleets
+ptes_mirror,Mirror,50,0.1,Create copy of player fleet.,graphics/icons/abilities/go_dark.png,data.scripts.mapEffects.ptes_mirror

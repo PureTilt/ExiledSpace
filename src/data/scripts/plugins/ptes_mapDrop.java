@@ -57,11 +57,6 @@ public class ptes_mapDrop extends BaseCampaignEventListener {
         if (FleetFP < 100) return;
         int totalMaps = 0;
 
-        WeightedRandomPicker<String> weightedEffects = new WeightedRandomPicker<>();
-        for (Map.Entry<String, ptes_mapEffectEntry> entry : mapEffectsMap.entrySet()){
-            weightedEffects.add(entry.getKey(), entry.getValue().weight);
-        }
-
         for (FleetMemberData member : casualties) {
             if (member.getStatus() == Status.NORMAL) continue;
             float ShipFP = member.getMember().getFleetPointCost();
@@ -83,9 +78,13 @@ public class ptes_mapDrop extends BaseCampaignEventListener {
                 for (MutableCharacterStatsAPI.SkillLevelAPI skill : member.getMember().getCaptain().getStats().getSkillsCopy()){
                     officerLevel += skill.getLevel();
                 }
+                WeightedRandomPicker<String> weightedEffects = new WeightedRandomPicker<>();
+                for (Map.Entry<String, ptes_mapEffectEntry> entry : mapEffectsMap.entrySet()){
+                    weightedEffects.add(entry.getKey(), entry.getValue().weight);
+                }
                 int SMods = member.getMember().getVariant().getSMods().size();
                 List<String> mapEffects = new ArrayList<>();
-                for (int i = 0; i < officerLevel; i ++){
+                for (int i = -2; i < officerLevel; i ++){
                     if (Math.random() >= 0.9f){
                         String effect = weightedEffects.pick();
                         mapEffects.add(effect);
@@ -94,7 +93,7 @@ public class ptes_mapDrop extends BaseCampaignEventListener {
                         break;
                     }
                 }
-                for (int i = 0; i < SMods; i ++){
+                for (int i = -1; i < SMods; i ++){
                     if (Math.random() >= 0.8f){
                         String effect = weightedEffects.pick();
                         mapEffects.add(effect);

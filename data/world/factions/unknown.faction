@@ -1,9 +1,9 @@
 {
-	id:"uknown", # ... or is it?
-	"displayName":"Uknown",
-	"displayNameWithArticle":"the Uknown",
-	"displayNameLong":"Uknown",
-	"displayNameLongWithArticle":"the Uknown",
+	id:"unknown", # ... or is it?
+	"displayName":"Unknown",
+	"displayNameWithArticle":"the Unknown",
+	"displayNameLong":"Unknown",
+	"displayNameLongWithArticle":"the Unknown",
 	"entityNamePrefix":"",
 	"personNamePrefix":"",
 	"personNamePrefixAOrAn":"an",
@@ -151,7 +151,6 @@
 		"allowsTransponderOffTrade":true, # to prevent cargoscan dialog from "patrols"
 		"postsNoBounties":true,
 		"fightToTheLast":true, # order a full assault instead of retreating, in most cases
-		"noAICoresFromAutomatedDefenses":true,
 		"officersOnAutomatedDefenses":true,
 	},	
 	"fleetTypeNames":{
