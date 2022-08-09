@@ -2,7 +2,6 @@ package data.world.systems;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.*;
-import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.impl.campaign.fleets.FleetFactoryV3;
 import com.fs.starfarer.api.impl.campaign.ids.Abilities;
 import com.fs.starfarer.api.impl.campaign.ids.Factions;
@@ -26,6 +25,7 @@ import java.util.Random;
 
 import static com.fs.starfarer.api.impl.campaign.procgen.StarSystemGenerator.NEBULA_NONE;
 import static com.fs.starfarer.api.impl.campaign.procgen.themes.BaseThemeGenerator.addSalvageEntity;
+import static data.scripts.ids.ptes_factions.MAP_FACTION;
 import static data.scripts.ptes_ModPlugin.salvageList;
 
 public class ptes_genericSystem extends ptes_baseSystemScript {
@@ -171,7 +171,7 @@ public class ptes_genericSystem extends ptes_baseSystemScript {
                 fleet.getCommander().getStats().setSkillLevel("vic_difficultyDPReduction",1);
             }
 
-            fleet.setFaction("unknown", true);
+            fleet.setFaction(MAP_FACTION, true);
             system.addEntity(fleet);
 
             if (pointsToDefend.size() != 0) {

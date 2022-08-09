@@ -141,7 +141,9 @@ public class ptes_riftGateDialog extends BaseCommandPlugin {
     }
 
     protected void GetInToSystem() {
-        dialog.showCustomDialog(500, 400, new CustomDialogDelegate() {
+        int effects = ((ptes_mapItemInfo) entity.getMemory().get("$activeMap")).effects.size();
+        final int height = 264 + 58 * effects + (effects > 0 ? 20 : 0);
+        dialog.showCustomDialog(500, height, new CustomDialogDelegate() {
             @Override
             public void createCustomDialog(CustomPanelAPI panel) {
                 float pad = 3f;
@@ -149,7 +151,6 @@ public class ptes_riftGateDialog extends BaseCommandPlugin {
                 float opad = 10f;
 
                 float width = 500;
-                float height = 400;
 
                 TooltipMakerAPI subPanel = panel.createUIElement(width,height, true);
                 subPanel.setTitleOrbitronLarge();

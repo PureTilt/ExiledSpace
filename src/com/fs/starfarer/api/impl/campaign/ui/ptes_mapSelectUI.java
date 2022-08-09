@@ -42,6 +42,7 @@ public class ptes_mapSelectUI implements CustomDialogDelegate {
 
 
     HashMap<ButtonAPI, CargoStackAPI> buttons = new HashMap<>();
+    HashMap<ButtonAPI, mapInfo> madeFleets = new HashMap<>();
     //List<ButtonAPI> buttons = new ArrayList<>();
 
     @Override
@@ -63,7 +64,7 @@ public class ptes_mapSelectUI implements CustomDialogDelegate {
             if (stack.getPlugin() instanceof ptes_mapItemPlugin) {
                 ptes_mapItemInfo data = (ptes_mapItemInfo) stack.getSpecialDataIfSpecial();
                 ButtonAPI button = UI.addAreaCheckbox("", null, Misc.getBasePlayerColor(), Misc.getDarkPlayerColor(), Misc.getBrightPlayerColor(), 0, 0, 0, true);
-                UI.addTooltipToPrevious(new BackgroundTooltipCreator(data, backgroundBoxWidth), TooltipMakerAPI.TooltipLocation.BELOW);
+                //UI.addTooltipToPrevious(new BackgroundTooltipCreator(data, backgroundBoxWidth), TooltipMakerAPI.TooltipLocation.BELOW);
 
                 FactionAPI faction = Global.getSector().getFaction(data.FactionId);
                 String factionName = faction.getDisplayNameWithArticle();
@@ -164,7 +165,6 @@ public class ptes_mapSelectUI implements CustomDialogDelegate {
         return new CustomUIPanelPlugin() {
 
             ButtonAPI lastActive = null;
-            List<UIComponentAPI> infoPanelElements = new ArrayList<>();
 
 
             @Override
@@ -191,69 +191,80 @@ public class ptes_mapSelectUI implements CustomDialogDelegate {
                         if (!button.equals(lastActive)) {
                             ptes_mapItemInfo map = ((ptes_mapItemInfo) pair.getValue().getData());
 
-                            if (lastActive != null) lastActive.setChecked(false);
-                            lastActive = button;
-
-                            //update fleet preview
-                            UIComponentAPI prev = fleetPrev.getPrev();
-                            prev.getPosition().setYAlignOffset(10000);
-                            mainPanel.removeComponent(prev);
-                            fleetPrev.removeComponent(prev);
-                            CampaignFleetAPI fleet = FleetFactoryV3.createFleet(FactionMap.get(map.FactionId).genClass.generateFleetParams(map.FP, FactionMap.get(map.FactionId)));
-                            fleetPrev.addShipList(14, 4, 48, Misc.getBasePlayerColor(), fleet.getMembersWithFightersCopy(), 5);
-                            fleetPrev.getPrev().getPosition().inTL(5, 30);
-                            float DP = 0;
-                            for (FleetMemberAPI member : fleet.getMembersWithFightersCopy()) {
-                                if (!member.isFighterWing()) {
-                                    DP += member.getDeploymentPointsCost();
+                            if (lastActive != null) {
+                                lastActive.setChecked(false);
+                                //move out prev UI stuff
+                                madeFleets.get(lastActive).fleetPreview.getPosition().setYAlignOffset(10000);
+                                for (UIComponentAPI element : madeFleets.get(lastActive).mapData) {
+                                    element.getPosition().inTL(10000, 10000);
                                 }
                             }
-                            //Global.getLogger(ptes_mapSelectUI.class).info(DP);
-                            //Global.getLogger(ptes_mapSelectUI.class).info(fleet.getFleetPoints());
-                            fleet.despawn();
 
+                            //update fleet preview
+                            UIComponentAPI fleetList;
+                            if (madeFleets.containsKey(button)){
+                                //move in current stuff
+                                madeFleets.get(button).fleetPreview.getPosition().inTL(5, 30);
+                                int elementCount = 0;
+                                for (UIComponentAPI element : madeFleets.get(button).mapData) {
+                                    element.getPosition().inTL(10, 25 + 69 * elementCount);
+                                    elementCount++;
+                                }
+                            } else {
+                                //create new elements
+                                mapInfo mapUI = new mapInfo();
+                                //fleet prev
+                                Global.getLogger(ptes_mapSelectUI.class).info("made new fleet");
+                                CampaignFleetAPI fleet = FleetFactoryV3.createFleet(FactionMap.get(map.FactionId).genClass.generateFleetParams(map.FP, FactionMap.get(map.FactionId)));
+                                fleetPrev.addShipList(14, 4, 48, Misc.getBasePlayerColor(), fleet.getMembersWithFightersCopy(), 5);
+                                fleetList = fleetPrev.getPrev();
+                                mapUI.fleetPreview = fleetList;
+                                fleetList.getPosition().inTL(5, 30);
+                                float DP = 0;
+                                for (FleetMemberAPI member : fleet.getMembersWithFightersCopy()) {
+                                    if (!member.isFighterWing()) {
+                                        DP += member.getDeploymentPointsCost();
+                                    }
+                                }
+                                fleet.despawn();
 
-                            //update info pannel
-                            for (UIComponentAPI element : new ArrayList<>(infoPanelElements)) {
-                                element.getPosition().setYAlignOffset(10000);
-                                infoPanel.removeComponent(element);
-                                mainPanel.removeComponent(element);
-                            }
-                            infoPanelElements.clear();
-                            int elementCount = 0;
-                            FactionAPI faction = Global.getSector().getFaction(map.FactionId);
-                            String factionName = faction.getDisplayNameWithArticle();
+                                //info panel
+                                int elementCount = 0;
+                                FactionAPI faction = Global.getSector().getFaction(map.FactionId);
+                                String factionName = faction.getDisplayNameWithArticle();
 
-                            TooltipMakerAPI image = infoPanel.beginImageWithText(faction.getCrest(), 64);
-                            image.addPara("This location contains fleets which mimics " + factionName + ".", pad, faction.getColor(), factionName);
-                            image.addPara("Power of fleets: " + map.FP, pad, Misc.getHighlightColor(), map.FP + "");
-                            image.addPara("Loot quantity: " + map.LP, pad, Misc.getHighlightColor(), map.LP + "");
-                            infoPanel.addImageWithText(pad);
-                            infoPanel.getPrev().getPosition().inTL(10, 25);
-                            infoPanelElements.add(infoPanel.getPrev());
-                            elementCount++;
-
-                            image = infoPanel.beginImageWithText(systemTypeIcons.get(map.systemType), 64);
-                            image.addPara("System type:", pad);
-                            image.addPara(systemTypeNames.get(map.systemType), pad);
-                            infoPanel.addImageWithText(pad);
-                            infoPanel.getPrev().getPosition().inTL(10, 25 + 69 * elementCount);
-                            infoPanelElements.add(infoPanel.getPrev());
-                            elementCount++;
-
-                            for (String effectID : map.effects){
-                                ptes_mapEffectEntry effect = mapEffectsMap.get(effectID);
-                                TooltipMakerAPI effectEntry = infoPanel.beginImageWithText(effect.iconPath, 48);
-                                effectEntry.addPara(effect.name, Misc.getHighlightColor(), pad);
-                                
-                                effectEntry.addPara(effect.description, pad);
+                                TooltipMakerAPI image = infoPanel.beginImageWithText(faction.getCrest(), 64);
+                                image.addPara("This location contains fleets which mimics " + factionName + ".", pad, faction.getColor(), factionName);
+                                image.addPara("Power of fleets: " + map.FP, pad, Misc.getHighlightColor(), map.FP + "");
+                                image.addPara("Loot quantity: " + map.LP, pad, Misc.getHighlightColor(), map.LP + "");
                                 infoPanel.addImageWithText(pad);
-                                infoPanel.getPrev().getPosition().inTL(10, 25 + 69 * elementCount);
-                                infoPanelElements.add(infoPanel.getPrev());
-
+                                mapUI.mapData.add(infoPanel.getPrev());
+                                infoPanel.getPrev().getPosition().inTL(10, 25);
                                 elementCount++;
-                            }
 
+                                image = infoPanel.beginImageWithText(systemTypeIcons.get(map.systemType), 64);
+                                image.addPara("System type:", pad);
+                                image.addPara(systemTypeNames.get(map.systemType), pad);
+                                infoPanel.addImageWithText(pad);
+                                mapUI.mapData.add(infoPanel.getPrev());
+                                infoPanel.getPrev().getPosition().inTL(10, 25 + 69 * elementCount);
+                                elementCount++;
+
+                                for (String effectID : map.effects){
+                                    ptes_mapEffectEntry effect = mapEffectsMap.get(effectID);
+                                    TooltipMakerAPI effectEntry = infoPanel.beginImageWithText(effect.iconPath, 48);
+                                    effectEntry.addPara(effect.name, Misc.getHighlightColor(), pad);
+
+                                    effectEntry.addPara(effect.description, pad);
+                                    infoPanel.addImageWithText(pad);
+                                    mapUI.mapData.add(infoPanel.getPrev());
+                                    infoPanel.getPrev().getPosition().inTL(10, 25 + 69 * elementCount);
+
+                                    elementCount++;
+                                }
+                                madeFleets.put(button, mapUI);
+                            }
+                            lastActive = button;
                             atLeastOne = true;
                             break;
                         }
@@ -302,5 +313,10 @@ public class ptes_mapSelectUI implements CustomDialogDelegate {
                 tooltip.addImageWithText(opad);
             }
         }
+    }
+
+    public static class mapInfo {
+        public UIComponentAPI fleetPreview;
+        public List<UIComponentAPI> mapData = new ArrayList<>();
     }
 }

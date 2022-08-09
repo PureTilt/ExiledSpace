@@ -200,6 +200,37 @@ public class ptes_refittedProcGen extends StarSystemGenerator{
 		return picker.pick();
 	}
 
+	@Override
+	protected GenResult addPlanetsAndTerrain(float maxOrbitRadius) {
+		boolean hasOrbits = random.nextFloat() < starData.getProbOrbits();
+		if (!hasOrbits) return null;
+
+		float min = starData.getMinOrbits() + starAgeData.getMinExtraOrbits() + 5;
+		float max = starData.getMaxOrbits() + starAgeData.getMaxExtraOrbits() + 2;
+		int numOrbits = Math.round(getNormalRandom(min, max));
+
+		if (numOrbits <= 0) return null;
+
+
+
+		float currentRadius = centerRadius + STARTING_RADIUS_STAR_BASE + STARTING_RADIUS_STAR_RANGE * random.nextFloat();
+
+		//GenContext context = new GenContext(this, system, star, starData,
+		GenContext context = new GenContext(this, system, systemCenter, starData,
+				null, 0, starAge.name(), currentRadius, maxOrbitRadius, null, -1);
+
+		if (systemType == StarSystemType.BINARY_CLOSE || systemType == StarSystemType.TRINARY_1CLOSE_1FAR) {
+			context.multipliers.add(COL_BINARY);
+		}
+		if (systemType == StarSystemType.TRINARY_2CLOSE) {
+			context.multipliers.add(COL_TRINARY);
+		}
+
+		GenResult result = addOrbitingEntities(context, numOrbits, false, true, false, true);
+		result.context = context;
+		return result;
+	}
+
 	public void initGen(StarSystemAPI system, SectorAPI sector, String nebulaType){
 		this.system = system;
 		this.sector = sector;

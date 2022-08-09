@@ -3,7 +3,6 @@ package data.scripts;
 import com.fs.starfarer.api.BaseModPlugin;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.FactionAPI;
-import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.util.WeightedRandomPicker;
 import data.scripts.plugins.ptes_faction;
 import data.scripts.plugins.ptes_mapEffectEntry;
@@ -14,6 +13,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.*;
+
+import static data.scripts.ids.ptes_factions.MAP_FACTION;
 
 public class ptes_ModPlugin extends BaseModPlugin {
 
@@ -37,6 +38,14 @@ public class ptes_ModPlugin extends BaseModPlugin {
     }
 
     public void onGameLoad(boolean newGame) {
+        //if (newGame) return;
+        boolean haveNexerelin = Global.getSettings().getModManager().isModEnabled("nexerelin");
+        new ptes_gen().generate(Global.getSector());
+        Global.getSector().addListener(new ptes_mapDrop());
+        for (FactionAPI faction : Global.getSector().getAllFactions()){
+            if (faction.getId().equals(MAP_FACTION)) continue;
+            faction.setRelationship(MAP_FACTION, -100);
+        }
         //Global.getSector().getFaction("unknown").setRelationship("uknown", 100);
     }
 
@@ -167,8 +176,8 @@ public class ptes_ModPlugin extends BaseModPlugin {
         new ptes_gen().generate(Global.getSector());
         Global.getSector().addListener(new ptes_mapDrop());
         for (FactionAPI faction : Global.getSector().getAllFactions()){
-            if (faction.getId().equals("unknown")) continue;
-            faction.setRelationship("unknown", -100);
+            if (faction.getId().equals(MAP_FACTION)) continue;
+            faction.setRelationship(MAP_FACTION, -100);
         }
         //Global.getSector().getFaction("unknown").setRelationship("uknown", 100);
     }

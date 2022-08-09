@@ -1,10 +1,16 @@
 package data.scripts.mapEffects;
 
+import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignFleetAPI;
 import com.fs.starfarer.api.campaign.StarSystemAPI;
+import com.fs.starfarer.api.characters.PersonAPI;
+import com.fs.starfarer.api.fleet.FleetMemberAPI;
+import com.fs.starfarer.api.impl.campaign.events.OfficerManagerEvent;
 import com.fs.starfarer.api.util.WeightedRandomPicker;
 import data.scripts.plugins.ptes_baseEffectPlugin;
 import data.world.systems.ptes_baseSystemScript;
+
+import static data.scripts.ids.ptes_factions.MAP_FACTION;
 
 public class ptes_omegaIncursion implements ptes_baseEffectPlugin {
 
@@ -27,7 +33,11 @@ public class ptes_omegaIncursion implements ptes_baseEffectPlugin {
     @Override
     public void afterGeneration(StarSystemAPI system, ptes_baseSystemScript genScript) {
         for (CampaignFleetAPI fleet : genScript.spawnedFleets) {
-            fleet.getFleetData().addFleetMember(variants.pick());
+            FleetMemberAPI member = fleet.getFleetData().addFleetMember(variants.pick());
+            member.getRepairTracker().applyCREvent(1, "repair");
+            PersonAPI officer = OfficerManagerEvent.createOfficer(Global.getSector().getFaction("omega"), 8);
+            officer.setFaction(MAP_FACTION);
+            member.setCaptain(officer);
         }
     }
 }
