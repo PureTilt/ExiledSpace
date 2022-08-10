@@ -7,3 +7,4 @@ ptes_bestOfTheBest,Best of The Best,50,1,Increases average amount of Smods in fl
 ptes_recruitmentProgram,Recruitment Program,50,1,Increases ammount of officers by 50% and officer level by 2.,graphics/icons/skills/command_experience.png,data.scripts.mapEffects.ptes_recruitmentProgram
 ptes_stealthFleets,Stealth Fleets,50,1,Reduses sensor profile of fleets by 50%.,graphics/icons/abilities/go_dark.png,data.scripts.mapEffects.ptes_stealthFleets
 ptes_mirror,Shadow Mirror,50,0.1,Create copy of player fleet.,graphics/icons/markets/habitable.png,data.scripts.mapEffects.ptes_mirror
+ptes_monofleets,Monofleets,50,0.5,All fleets compose of 1 ship class.,graphics/icons/markets/habitable.png,data.scripts.mapEffects.ptes_monofleets
