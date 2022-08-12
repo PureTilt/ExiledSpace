@@ -38,15 +38,11 @@ public class ptes_ModPlugin extends BaseModPlugin {
     }
 
     public void onGameLoad(boolean newGame) {
-        //if (newGame) return;
-        boolean haveNexerelin = Global.getSettings().getModManager().isModEnabled("nexerelin");
-        new ptes_gen().generate(Global.getSector());
-        Global.getSector().addListener(new ptes_mapDrop());
+        if (newGame) return;
         for (FactionAPI faction : Global.getSector().getAllFactions()){
             if (faction.getId().equals(MAP_FACTION)) continue;
             faction.setRelationship(MAP_FACTION, -100);
         }
-        //Global.getSector().getFaction("unknown").setRelationship("uknown", 100);
     }
 
     @Override
