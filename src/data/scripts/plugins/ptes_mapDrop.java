@@ -28,7 +28,7 @@ public class ptes_mapDrop extends BaseCampaignEventListener {
     }
 
     public ptes_mapDrop() {
-        super(true);
+        super(false);
     }
 
     public void reportEncounterLootGenerated(FleetEncounterContextPlugin plugin, CargoAPI loot) {
@@ -97,7 +97,7 @@ public class ptes_mapDrop extends BaseCampaignEventListener {
                     mapEffects.add(effect);
                     weightedEffects.remove(effect);
                     //Global.getLogger(ptes_mapDrop.class).info("first effect:" + effect);
-                    mapWeight += 15;
+                    mapWeight += mapEffectsMap.get(effect).cost;
                     break;
                 }
             }
@@ -108,7 +108,7 @@ public class ptes_mapDrop extends BaseCampaignEventListener {
                     mapEffects.add(effect);
                     weightedEffects.remove(effect);
                     //Global.getLogger(ptes_mapDrop.class).info("second effect:" + effect);
-                    mapWeight += 15;
+                    mapWeight += mapEffectsMap.get(effect).cost;
                     break;
                 }
             }
@@ -137,10 +137,17 @@ public class ptes_mapDrop extends BaseCampaignEventListener {
             //Global.getLogger(ptes_mapDrop.class).info("map added");
 
         }
+        int maps = mapList.getItems().size();
         logger("Num maps: " + mapList.getItems().size());
-        int mapAmount = MathUtils.getRandomNumberInRange(0,2);
-        logger("Will get: " + mapAmount);
-        for (int i = 0; i < mapAmount; i++){
+
+        float random = getRandomNumberInRange((float) Math.random(), 0f, 0.5f);
+        random += maps * 0.01f;
+        logger("Will get: " + random);
+        while (random > 1f){
+            loot.addSpecial(mapList.pickAndRemove(), 1);
+            random--;
+        }
+        if (Math.random() <= random){
             loot.addSpecial(mapList.pickAndRemove(), 1);
         }
     }

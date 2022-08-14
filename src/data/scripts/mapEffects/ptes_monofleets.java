@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ptes_monofleets implements ptes_baseEffectPlugin {
+
     @Override
     public void beforeGeneration(StarSystemAPI system, ptes_baseSystemScript genScript) {
 
@@ -23,6 +24,7 @@ public class ptes_monofleets implements ptes_baseEffectPlugin {
         for (CampaignFleetAPI fleet : genScript.spawnedFleets) {
             WeightedRandomPicker<FleetMemberAPI> variantPicker = new WeightedRandomPicker<>();
             List<PersonAPI> officers = new ArrayList<>();
+            int FP = fleet.getFleetPoints();
             for (FleetMemberAPI member : fleet.getFleetData().getMembersListCopy()) {
                 officers.add(member.getCaptain());
                 variantPicker.add(member, member.getFleetPointCost());
@@ -30,7 +32,7 @@ public class ptes_monofleets implements ptes_baseEffectPlugin {
             }
 
             FleetMemberAPI replacementMember = variantPicker.pick();
-            int shipAmount = Math.round((float) fleet.getFleetPoints() / replacementMember.getFleetPointCost());
+            int shipAmount = Math.round((float) FP / replacementMember.getFleetPointCost());
 
             for (int i = 0; i < shipAmount; i++) {
                 FleetMemberAPI newShip = fleet.getFleetData().addFleetMember(replacementMember.getVariant().getHullVariantId());

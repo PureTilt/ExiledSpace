@@ -38,6 +38,7 @@ public class ptes_ModPlugin extends BaseModPlugin {
     }
 
     public void onGameLoad(boolean newGame) {
+        Global.getSector().addTransientListener(new ptes_mapDrop());
         if (newGame) return;
         for (FactionAPI faction : Global.getSector().getAllFactions()){
             if (faction.getId().equals(MAP_FACTION)) continue;
@@ -170,7 +171,6 @@ public class ptes_ModPlugin extends BaseModPlugin {
     public void onEnabled(boolean wasEnabledBefore) {
         boolean haveNexerelin = Global.getSettings().getModManager().isModEnabled("nexerelin");
         new ptes_gen().generate(Global.getSector());
-        Global.getSector().addListener(new ptes_mapDrop());
         for (FactionAPI faction : Global.getSector().getAllFactions()){
             if (faction.getId().equals(MAP_FACTION)) continue;
             faction.setRelationship(MAP_FACTION, -100);
