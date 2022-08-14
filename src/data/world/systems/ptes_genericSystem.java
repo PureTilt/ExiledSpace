@@ -180,7 +180,7 @@ public class ptes_genericSystem extends ptes_baseSystemScript {
                 fleet.addAssignment(FleetAssignment.ORBIT_AGGRESSIVE, entity, 99999999f);
                 pointsToDefend.remove(entity);
             } else {
-                fleet.setLocation(MathUtils.getRandomNumberInRange(3000, 5000) * MathUtils.getRandomNumberInRange(-1, 1), MathUtils.getRandomNumberInRange(3000, 5000) * MathUtils.getRandomNumberInRange(-1, 1));
+                fleet.setLocation(MathUtils.getRandomNumberInRange(3000, 5000) * (Math.random() >= 0.5f ? 1 : -1), MathUtils.getRandomNumberInRange(3000, 5000) * (Math.random() >= 0.5f ? 1 : -1));
                 fleet.addAssignment(FleetAssignment.PATROL_SYSTEM, system.getCenter(), 9999999999f);
             }
 
