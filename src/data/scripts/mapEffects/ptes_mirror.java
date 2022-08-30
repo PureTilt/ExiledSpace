@@ -41,6 +41,7 @@ public class ptes_mirror implements ptes_baseEffectPlugin {
             PersonAPI newPerson = fleet.getFaction().createRandomPerson();
             newPerson.setFleet(fleet);
 
+            newPerson.getStats().setLevel(oldPerson.getStats().getLevel());
             newPerson.setName(oldPerson.getName());
             newPerson.setPersonality(oldPerson.getPersonalityAPI().getId());
             newPerson.setPortraitSprite(oldPerson.getPortraitSprite());
