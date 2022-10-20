@@ -200,6 +200,8 @@ public class ptes_genericSystem extends ptes_baseSystemScript {
             fleet.getStats().getFleetwideMaxBurnMod().modifyFlat("ptes", 2);
             fleet.getStats().getSensorRangeMod().modifyFlat("ptes", 500);
 
+            //fleet.getCargo().addWeapons("ioncannon", 10000);
+            //fleet.getCargo().addSpecial(new SpecialItemData("dealmaker_holosuite",null),1);
 
             spawnedFleets.add(fleet);
             fleetsSpawned++;

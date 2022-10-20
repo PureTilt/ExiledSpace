@@ -49,9 +49,9 @@ public class ptes_giveMapUI implements CustomDialogDelegate {
         TooltipMakerAPI radioSelectPanel = panel.createUIElement(width,height, true);
         float totalWeight = weightedFactions.getTotal();
         boolean doonce = true;
-        for (Map.Entry<String, ptes_faction> pair : FactionMap.entrySet()){
+        for (ptes_faction entry :weightedFactions.getItems()){
 
-                FactionAPI faction = Global.getSector().getFaction(pair.getValue().faction);
+                FactionAPI faction = Global.getSector().getFaction(entry.faction);
                 String factionName =  faction.getDisplayName();
 
 
@@ -62,8 +62,8 @@ public class ptes_giveMapUI implements CustomDialogDelegate {
                 TooltipMakerAPI image = radioSelectPanel.beginImageWithText(faction.getCrest(), 64);
 
                 image.addPara(factionName + "", pad, faction.getColor(), factionName);
-                image.addPara("Weight: " + pair.getValue().weight, pad , Misc.getHighlightColor(), pair.getValue().weight + "");
-                float chanceToDrop = Math.round((pair.getValue().weight / totalWeight) * 10000f) / 100f;
+                image.addPara("Weight: " + entry.weight, pad , Misc.getHighlightColor(), entry.weight + "");
+                float chanceToDrop = Math.round((entry.weight / totalWeight) * 10000f) / 100f;
                 image.addPara("Chance to drop: " + chanceToDrop + "%%", pad , Misc.getHighlightColor(), chanceToDrop + "%");
 
                 image.addSpacer(10f);
@@ -82,7 +82,7 @@ public class ptes_giveMapUI implements CustomDialogDelegate {
                 imageWithTextPosition.setYAlignOffset(imageWithTextHeight + spacerHeight);
                 radioSelectPanel.addSpacer(0f).getPosition().setXAlignOffset(-imageWithTextXOffset);
 
-                buttons.put(button, pair.getValue());
+                buttons.put(button, entry);
                 if (doonce){
                     button.setChecked(true);
                     doonce = false;
@@ -91,8 +91,8 @@ public class ptes_giveMapUI implements CustomDialogDelegate {
         panel.addUIElement(radioSelectPanel).inTL(0f, 0f);
 
         TooltipMakerAPI effectsPanel = panel.createUIElement(width,height, true);
-        for (Map.Entry<String, ptes_mapEffectEntry> entry : mapEffectsMap.entrySet()){
-            ptes_mapEffectEntry effect = entry.getValue();
+        for (String entry : mapEffects){
+            ptes_mapEffectEntry effect = mapEffectsMap.get(entry);
 
             ButtonAPI button = effectsPanel.addAreaCheckbox("", null, Misc.getBasePlayerColor(), Misc.getDarkPlayerColor(), Misc.getBrightPlayerColor(), 0, 0, 0, true);
 

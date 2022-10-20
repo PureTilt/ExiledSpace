@@ -2,17 +2,23 @@ package data.scripts;
 
 import com.fs.starfarer.api.BaseModPlugin;
 import com.fs.starfarer.api.Global;
+import com.fs.starfarer.api.ModSpecAPI;
 import com.fs.starfarer.api.campaign.FactionAPI;
 import com.fs.starfarer.api.util.WeightedRandomPicker;
 import data.scripts.plugins.ptes_faction;
+import data.scripts.plugins.ptes_mapDrop;
 import data.scripts.plugins.ptes_mapEffectEntry;
 import data.scripts.plugins.ptes_salvageEntity;
-import data.scripts.plugins.ptes_mapDrop;
 import data.world.ptes_gen;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.*;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static data.scripts.ids.ptes_factions.MAP_FACTION;
 
@@ -28,132 +34,193 @@ public class ptes_ModPlugin extends BaseModPlugin {
     static public HashMap<String, ptes_mapEffectEntry> mapEffectsMap = new HashMap<>();
     static public List<String> mapEffects = new ArrayList<>();
 
-    static void logger (String text){
+    static void logger(String text) {
         if (DevMode) log.info(text);
     }
 
     @Override
-    public void onApplicationLoad(){
+    public void onApplicationLoad() {
         loadData();
     }
 
     public void onGameLoad(boolean newGame) {
         Global.getSector().addTransientListener(new ptes_mapDrop());
-        if (newGame) return;
-        for (FactionAPI faction : Global.getSector().getAllFactions()){
+        for (FactionAPI faction : Global.getSector().getAllFactions()) {
             if (faction.getId().equals(MAP_FACTION)) continue;
             faction.setRelationship(MAP_FACTION, -100);
         }
+        /*
+        if (!Global.getSector().getMemory().contains("pt_gate")){
+
+            Global.getSector().getMemory().set("pt_gate", );
+        }
+
+         */
+        factionCheck();
     }
 
     @Override
     public void onDevModeF8Reload() {
         loadData();
+        factionCheck();
     }
 
-    public void loadData(){
-        backGrounds.clear();
-        ClassLoader classLoader = Global.getSettings().getScriptClassLoader();
-        logger("loading BGs");
-        try {
-            JSONArray spreadsheet = Global.getSettings().getMergedSpreadsheetDataForMod("name", "data/config/ExiledSpace/backgrounds.csv", "pt_exiledSpace");
-
-            for (int i = 0; i < spreadsheet.length(); i++) {
-                JSONObject row = spreadsheet.getJSONObject(i);
-                String name = row.getString("name");
-
-                backGrounds.add(name);
+    public void loadData() {
+        List<ModSpecAPI> mods = Global.getSettings().getModManager().getEnabledModsCopy();
+        for (ModSpecAPI mod : mods) {
+            if (mod.getId().equals("pt_exiledSpace")){
+                mods.remove(mod);
+                mods.add(0,mod);
+                break;
             }
-        } catch (Exception e) {
-            log.error(e);
+        }
+        ClassLoader classLoader = Global.getSettings().getScriptClassLoader();
+
+        logger("loading BGs");
+        backGrounds.clear();
+        for (ModSpecAPI mod : mods) {
+            try {
+                //JSONArray spreadsheet = Global.getSettings().getMergedSpreadsheetDataForMod("name", "data/config/ExiledSpace/backgrounds.csv", "pt_exiledSpace");
+                JSONArray spreadsheet = Global.getSettings().loadCSV("data/config/ExiledSpace/backgrounds.csv", mod.getId());
+
+                for (int i = 0; i < spreadsheet.length(); i++) {
+                    JSONObject row = spreadsheet.getJSONObject(i);
+                    String name = row.getString("name");
+
+                    backGrounds.add(name);
+                }
+            } catch (RuntimeException ignored){
+
+            } catch (Exception e) {
+                log.error(e);
+                log.error("Cause: " + mod.getName());
+            }
         }
         logger("BGs: " + backGrounds.size());
+
+        logger("loading Factions");
         weightedFactions.clear();
         FactionMap.clear();
-        logger("loading Factions");
-        try {
-            JSONArray spreadsheet = Global.getSettings().getMergedSpreadsheetDataForMod("id", "data/config/ExiledSpace/factions.csv", "pt_exiledSpace");
+        for (ModSpecAPI mod : mods) {
+            try {
+                //JSONArray spreadsheet = Global.getSettings().getMergedSpreadsheetDataForMod("id", "data/config/ExiledSpace/factions.csv", "pt_exiledSpace");
+                JSONArray spreadsheet = Global.getSettings().loadCSV("data/config/ExiledSpace/factions.csv", mod.getId());
 
-            for (int i = 0; i < spreadsheet.length(); i++) {
-                JSONObject row = spreadsheet.getJSONObject(i);
-                String id = row.getString("id");
-                String idOverride = row.getString("countsAs");
-                if (idOverride.equals("")) idOverride = null;
-                float weight = (float) row.getDouble("weight");
-                float FPMulti = (float) row.getDouble("FPMulti");
-                String genClass = row.getString("effectPlugin");
-                float lootMulti = (float) row.getDouble("lootMulti");
-                float quality = (float) row.getDouble("quality");
-                ptes_faction New = new ptes_faction(id, idOverride, weight, FPMulti, classLoader.loadClass(genClass), lootMulti, quality);
-                weightedFactions.add(New, weight);
-                FactionMap.put(New.faction, New);
-            }
-        } catch (Exception e) {
-            log.error(e);
-        }
-        logger("loading subfactions");
-        int subFactionsLoaded = 0;
-        try {
-            JSONArray spreadsheet = Global.getSettings().getMergedSpreadsheetDataForMod("subFactionID", "data/config/ExiledSpace/subFactions.csv", "pt_exiledSpace");
-
-            for (int i = 0; i < spreadsheet.length(); i++) {
-                JSONObject row = spreadsheet.getJSONObject(i);
-                String parentID = row.getString("parentFactionID");
-                String subId = row.getString("subFactionID");
-                float weight = (float) row.getDouble("weight");
-                FactionMap.get(parentID).subFactions.put(subId, weight);
-                subFactionsLoaded++;
-            }
-        } catch (Exception e) {
-            log.error(e);
-        }
-        logger("Subfcations: " + subFactionsLoaded);
-        logger("Factions: " + FactionMap.size());
-        logger("loading loot");
-        salvageList.clear();
-        try {
-            JSONArray spreadsheet = Global.getSettings().getMergedSpreadsheetDataForMod("id", "data/config/ExiledSpace/PointsOfInterest.csv", "pt_exiledSpace");
-
-            for (int i = 0; i < spreadsheet.length(); i++) {
-                JSONObject row = spreadsheet.getJSONObject(i);
-                String id = row.getString("id");
-                float cost = (float) row.getDouble("cost");
-                float weight = (float) row.getDouble("weight");
-                String factions = row.getString("faction restriction");
-
-                salvageList.add(new ptes_salvageEntity(id, weight, cost, factions));
-            }
-        } catch (Exception e) {
-            log.error(e);
-        }
-        logger("loot: " + salvageList.size());
-        logger("loading Map Effects");
-        mapEffects.clear();
-        try {
-            JSONArray spreadsheet = Global.getSettings().getMergedSpreadsheetDataForMod("id", "data/config/ExiledSpace/mapEffects.csv", "pt_exiledSpace");
-
-            for (int i = 0; i < spreadsheet.length(); i++) {
-                try {
+                for (int i = 0; i < spreadsheet.length(); i++) {
                     JSONObject row = spreadsheet.getJSONObject(i);
                     String id = row.getString("id");
-                    String name = row.getString("name");
+                    String idOverride = row.getString("countsAs");
+                    if (idOverride.equals("")) idOverride = null;
+                    float weight = (float) row.getDouble("weight");
+                    float FPMulti = (float) row.getDouble("FPMulti");
+                    String genClass = row.getString("effectPlugin");
+                    float lootMulti = (float) row.getDouble("lootMulti");
+                    float quality = (float) row.getDouble("quality");
+                    ptes_faction New = new ptes_faction(id, idOverride, weight, FPMulti, classLoader.loadClass(genClass), lootMulti, quality);
+                    weightedFactions.add(New, weight);
+                    FactionMap.put(New.faction, New);
+                }
+            } catch (RuntimeException ignored){
+            } catch (Exception e) {
+                log.error(e);
+                log.error("Cause: " + mod.getName());
+            }
+        }
+        logger("Factions: " + FactionMap.size());
+        logger("loading subfactions");
+        int subFactionsLoaded = 0;
+        for (ModSpecAPI mod : mods) {
+            try {
+                //JSONArray spreadsheet = Global.getSettings().getMergedSpreadsheetDataForMod("subFactionID", "data/config/ExiledSpace/subFactions.csv", "pt_exiledSpace");
+                JSONArray spreadsheet = Global.getSettings().loadCSV("data/config/ExiledSpace/subFactions.csv", mod.getId());
+
+                for (int i = 0; i < spreadsheet.length(); i++) {
+                    JSONObject row = spreadsheet.getJSONObject(i);
+                    String parentID = row.getString("parentFactionID");
+                    String subId = row.getString("subFactionID");
+                    float weight = (float) row.getDouble("weight");
+                    FactionMap.get(parentID).subFactions.put(subId, weight);
+                    subFactionsLoaded++;
+                }
+            }  catch (RuntimeException ignored){
+
+            } catch (Exception e) {
+                log.error(e);
+            }
+        }
+        logger("Subfcations: " + subFactionsLoaded);
+
+        salvageList.clear();
+        logger("Loading Salvage objects");
+        for (ModSpecAPI mod : mods) {
+            try {
+                //JSONArray spreadsheet = Global.getSettings().getMergedSpreadsheetDataForMod("id", "data/config/ExiledSpace/PointsOfInterest.csv", "pt_exiledSpace");
+                JSONArray spreadsheet = Global.getSettings().loadCSV("data/config/ExiledSpace/PointsOfInterest.csv", mod.getId());
+
+                for (int i = 0; i < spreadsheet.length(); i++) {
+                    JSONObject row = spreadsheet.getJSONObject(i);
+                    String id = row.getString("id");
                     float cost = (float) row.getDouble("cost");
                     float weight = (float) row.getDouble("weight");
-                    String description =  row.getString("description");
-                    String iconPath = row.getString("icon");
-                    Global.getSettings().loadTexture(iconPath);
-                    String genClass = row.getString("effectPlugin");
-                    //logger(name);
-                    mapEffectsMap.put(id, new ptes_mapEffectEntry(id, name, cost, weight, description, iconPath, classLoader.loadClass(genClass)));
-                    mapEffects.add(id);
-                } catch (Exception e) {
-                    log.error(e);
+                    String factions = row.getString("faction restriction");
+
+                    salvageList.add(new ptes_salvageEntity(id, weight, cost, factions));
                 }
+            }  catch (RuntimeException ignored){
+
+            } catch (Exception e) {
+                log.error(e);
             }
-        } catch (Exception e) {
-            log.error(e);
+        }
+        logger("Salvage objects: " + salvageList.size());
+
+        logger("loading Map Effects");
+        mapEffects.clear();
+        for (ModSpecAPI mod : mods) {
+            try {
+                //JSONArray spreadsheet = Global.getSettings().getMergedSpreadsheetDataForMod("id", "data/config/ExiledSpace/mapEffects.csv", "pt_exiledSpace");
+                JSONArray spreadsheet = Global.getSettings().loadCSV("data/config/ExiledSpace/mapEffects.csv", mod.getId());
+
+                for (int i = 0; i < spreadsheet.length(); i++) {
+                    try {
+                        JSONObject row = spreadsheet.getJSONObject(i);
+                        String id = row.getString("id");
+                        String name = row.getString("name");
+                        if (!mod.getId().equals("pt_exiledSpace")){
+                            name = "[" +mod.getName() +  "] " + name;
+                        }
+                        float cost = (float) row.getDouble("cost");
+                        float weight = (float) row.getDouble("weight");
+                        float order = (float) row.getDouble("order");
+                        String description = row.getString("description");
+                        String iconPath = row.getString("icon");
+                        Global.getSettings().loadTexture(iconPath);
+                        String genClass = row.getString("effectPlugin");
+                        //logger(name);
+                        mapEffectsMap.put(id, new ptes_mapEffectEntry(id, name, cost, weight, order, description, iconPath, classLoader.loadClass(genClass)));
+                        mapEffects.add(id);
+                    } catch (Exception e) {
+                        log.error(e);
+                    }
+                }
+            }  catch (RuntimeException ignored){
+
+            } catch (Exception e) {
+                log.error(e);
+            }
         }
         logger("effects: " + mapEffects.size());
+    }
+
+    public void factionCheck() {
+        for (Map.Entry<String, ptes_faction> entry : new ArrayList<>(FactionMap.entrySet())) {
+            FactionAPI faction = Global.getSector().getFaction(entry.getKey());
+            if (faction == null) {
+                logger("wrong faction ID: " + entry.getKey());
+                FactionMap.remove(entry.getKey());
+                weightedFactions.remove(entry.getValue());
+            }
+        }
     }
 
     @Override
@@ -171,7 +238,7 @@ public class ptes_ModPlugin extends BaseModPlugin {
     public void onEnabled(boolean wasEnabledBefore) {
         boolean haveNexerelin = Global.getSettings().getModManager().isModEnabled("nexerelin");
         new ptes_gen().generate(Global.getSector());
-        for (FactionAPI faction : Global.getSector().getAllFactions()){
+        for (FactionAPI faction : Global.getSector().getAllFactions()) {
             if (faction.getId().equals(MAP_FACTION)) continue;
             faction.setRelationship(MAP_FACTION, -100);
         }

@@ -12,8 +12,7 @@ import data.scripts.plugins.ptes_faction;
 import org.lazywizard.lazylib.MathUtils;
 import org.lwjgl.util.vector.Vector2f;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static data.scripts.ptes_ModPlugin.FactionMap;
 import static data.scripts.ptes_ModPlugin.mapEffectsMap;
@@ -67,6 +66,14 @@ public class ptes_baseSystemScript {
         //set data
         EnemyFP = mapData.FP;
         LootPoints = mapData.LP;
+        Collections.sort(mapData.effects, new Comparator<String>() {
+
+            public int compare(String o1, String o2) {
+                // compare two instance of `Score` and return `int` as result.
+                return Integer.compare(mapEffectsMap.get(o1).order, mapEffectsMap.get(o2).order);
+            }
+        });
+
         this.mapData = mapData;
         this.effects = mapData.effects;
         faction = FactionMap.get(mapData.FactionId);
@@ -128,6 +135,7 @@ public class ptes_baseSystemScript {
         params.maxNumShips = 100;
         params.minShipSize = Math.min(3, Math.round(EnemyFP / 200f - 0.5f));
         params.ignoreMarketFleetSizeMult = true;
+        params.modeOverride = FactionAPI.ShipPickMode.PRIORITY_THEN_ALL;
         if (faction.quality != null){
             params.qualityOverride = faction.quality;
         }

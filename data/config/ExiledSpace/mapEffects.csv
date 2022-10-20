@@ -1,10 +1,11 @@
-id,name,cost,weight,description,icon,effectPlugin
-#unique ID,,cost to spawn should corelate with average goodnes of mod can be negative if its bad,spawn weight,description,path to icon,path to script
-ptes_omegaInvasion,Omega Incursion,200,0.1,Adds 1 facet to every fleet.,graphics/icons/markets/rogue_ai.png,data.scripts.mapEffects.ptes_omegaIncursion
-ptes_fogOfWar,Fog of War,20,1,Covers system in nebula.,graphics/icons/markets/cold.png,data.scripts.mapEffects.ptes_fogOfWar
-ptes_qualityProduction,Quality Production,50,1,Increases fleet ship quality by 25%.,graphics/icons/markets/autofactory.png,data.scripts.mapEffects.ptes_qualityProduction
-ptes_bestOfTheBest,Best of The Best,50,1,Increases average amount of Smods in fleet by 2.,graphics/icons/markets/arms_tradeshow.png,data.scripts.mapEffects.ptes_bestOfTheBest
-ptes_recruitmentProgram,Recruitment Program,50,1,Increases ammount of officers by 50% and officer level by 2.,graphics/icons/skills/command_experience.png,data.scripts.mapEffects.ptes_recruitmentProgram
-ptes_stealthFleets,Stealth Fleets,50,1,Reduses sensor profile of fleets by 50%.,graphics/icons/abilities/go_dark.png,data.scripts.mapEffects.ptes_stealthFleets
-ptes_mirror,Shadow Mirror,200,0.1,Create copy of player fleet.,graphics/icons/markets/habitable.png,data.scripts.mapEffects.ptes_mirror
-ptes_monofleets,Monofleets,100,0.5,All fleets compose of 1 ship class.,graphics/icons/skills/officer_training.png,data.scripts.mapEffects.ptes_monofleets
+id,name,cost,weight,order,description,icon,effectPlugin
+#unique ID,,cost to spawn should corelate with average goodnes of mod can be negative if its bad,spawn weight,order of applying effets,description,path to icon,path to script
+ptes_omegaInvasion,Omega Incursion,200,0.1,4,Adds 1 facet to every fleet.,graphics/icons/markets/rogue_ai.png,data.scripts.mapEffects.ptes_omegaIncursion
+ptes_fogOfWar,Fog of War,20,1,1,Covers system in nebula.,graphics/icons/markets/cold.png,data.scripts.mapEffects.ptes_fogOfWar
+ptes_qualityProduction,Quality Production,50,1,1,Increases fleet ship quality by 25%.,graphics/icons/markets/autofactory.png,data.scripts.mapEffects.ptes_qualityProduction
+ptes_bestOfTheBest,Best of The Best,50,1,1,Increases average amount of Smods in fleet by 2.,graphics/icons/markets/arms_tradeshow.png,data.scripts.mapEffects.ptes_bestOfTheBest
+ptes_recruitmentProgram,Recruitment Program,50,1,1,Increases ammount of officers by 50% and officer level by 2.,graphics/icons/skills/command_experience.png,data.scripts.mapEffects.ptes_recruitmentProgram
+ptes_stealthFleets,Stealth Fleets,50,1,1,Reduses sensor profile of fleets by 50%.,graphics/icons/abilities/go_dark.png,data.scripts.mapEffects.ptes_stealthFleets
+ptes_mirror,Shadow Mirror,200,0.1,1,Create copy of player fleet.,graphics/icons/markets/habitable.png,data.scripts.mapEffects.ptes_mirror
+ptes_monofleets,Monofleets,100,0.5,1,All fleets compose of 1 ship class.,graphics/icons/skills/officer_training.png,data.scripts.mapEffects.ptes_monofleets
+ptes_lobster,Lobster,50,0.5,1,All fleets carry some amount of Volturnian Lobster in cargo.,graphics/icons/ptes_lobster.png,data.scripts.mapEffects.ptes_lobster

@@ -8,5 +8,6 @@ pirates,1,1.25,0.5,,0.2,data.world.systems.ptes_genericSystem,
 luddic_path,1,1.25,0.5,,-0.2,data.world.systems.ptes_genericSystem,
 remnant,0.5,1,1.25,,1.5,data.world.systems.ptes_genericSystem,
 omega,0.05,0.25,1.5,,2,data.world.systems.ptes_genericSystem,
+omegaa,0.05,0.25,1.5,,2,data.world.systems.ptes_genericSystem,
 #sub factions,,,,,,,
 lions_guard,0,1,1,,0.9,data.world.systems.ptes_genericSystem,sindrian_diktat
