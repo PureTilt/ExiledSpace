@@ -14,7 +14,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -68,9 +67,9 @@ public class ptes_ModPlugin extends BaseModPlugin {
     public void loadData() {
         List<ModSpecAPI> mods = Global.getSettings().getModManager().getEnabledModsCopy();
         for (ModSpecAPI mod : mods) {
-            if (mod.getId().equals("pt_exiledSpace")){
+            if (mod.getId().equals("pt_exiledSpace")) {
                 mods.remove(mod);
-                mods.add(0,mod);
+                mods.add(0, mod);
                 break;
             }
         }
@@ -89,7 +88,7 @@ public class ptes_ModPlugin extends BaseModPlugin {
 
                     backGrounds.add(name);
                 }
-            } catch (RuntimeException ignored){
+            } catch (RuntimeException ignored) {
 
             } catch (Exception e) {
                 log.error(e);
@@ -115,12 +114,12 @@ public class ptes_ModPlugin extends BaseModPlugin {
                     float FPMulti = (float) row.getDouble("FPMulti");
                     String genClass = row.getString("effectPlugin");
                     float lootMulti = (float) row.getDouble("lootMulti");
-                    float quality = (float) row.getDouble("quality");
+                    float quality = loadFloat(row, "quality", 1);
                     ptes_faction New = new ptes_faction(id, idOverride, weight, FPMulti, classLoader.loadClass(genClass), lootMulti, quality);
                     weightedFactions.add(New, weight);
                     FactionMap.put(New.faction, New);
                 }
-            } catch (RuntimeException ignored){
+            } catch (RuntimeException ignored) {
             } catch (Exception e) {
                 log.error(e);
                 log.error("Cause: " + mod.getName());
@@ -142,7 +141,7 @@ public class ptes_ModPlugin extends BaseModPlugin {
                     FactionMap.get(parentID).subFactions.put(subId, weight);
                     subFactionsLoaded++;
                 }
-            }  catch (RuntimeException ignored){
+            } catch (RuntimeException ignored) {
 
             } catch (Exception e) {
                 log.error(e);
@@ -166,7 +165,7 @@ public class ptes_ModPlugin extends BaseModPlugin {
 
                     salvageList.add(new ptes_salvageEntity(id, weight, cost, factions));
                 }
-            }  catch (RuntimeException ignored){
+            } catch (RuntimeException ignored) {
 
             } catch (Exception e) {
                 log.error(e);
@@ -186,8 +185,8 @@ public class ptes_ModPlugin extends BaseModPlugin {
                         JSONObject row = spreadsheet.getJSONObject(i);
                         String id = row.getString("id");
                         String name = row.getString("name");
-                        if (!mod.getId().equals("pt_exiledSpace")){
-                            name = "[" +mod.getName() +  "] " + name;
+                        if (!mod.getId().equals("pt_exiledSpace")) {
+                            name = "[" + mod.getName() + "] " + name;
                         }
                         float cost = (float) row.getDouble("cost");
                         float weight = (float) row.getDouble("weight");
@@ -203,7 +202,7 @@ public class ptes_ModPlugin extends BaseModPlugin {
                         log.error(e);
                     }
                 }
-            }  catch (RuntimeException ignored){
+            } catch (RuntimeException ignored) {
 
             } catch (Exception e) {
                 log.error(e);
@@ -270,5 +269,18 @@ public class ptes_ModPlugin extends BaseModPlugin {
         }
 
          */
+    }
+
+    public float loadFloat(JSONObject row, String id, float def) {
+        if (row.has(id)) {
+            try {
+                def = (float) row.getDouble(id);
+            } catch (JSONException ignored) {
+
+            } catch (Exception e) {
+                log.error(e);
+            }
+        }
+        return def;
     }
 }

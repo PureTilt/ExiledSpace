@@ -1,5 +1,5 @@
 id,weight,FPMulti,lootMulti,averageSmod,quality,effectPlugin,countsAs
-hegemony,1,1,1,,0.9,data.world.systems.ptes_genericSystem,
+hegemony,1,1,1,,,data.world.systems.ptes_genericSystem,
 tritachyon,1,1,1,,1.1,data.world.systems.ptes_genericSystem,
 persean,1,1,1,,1.03,data.world.systems.ptes_genericSystem,
 luddic_church,1,1,1,,0.6,data.world.systems.ptes_genericSystem,

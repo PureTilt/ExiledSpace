@@ -28,6 +28,7 @@ public class ptes_mirror implements ptes_baseEffectPlugin {
     public void afterGeneration(StarSystemAPI system, ptes_baseSystemScript genScript) {
         CampaignFleetAPI fleet = FleetFactoryV3.createEmptyFleet("unknown", FleetTypes.PATROL_LARGE,null);
         for (FleetMemberAPI member : Global.getSector().getPlayerFleet().getMembersWithFightersCopy()){
+            if (member.isFighterWing()) continue;
             FleetMemberAPI newMember = Global.getFactory().createFleetMember(FleetMemberType.SHIP, member.getVariant());
             newMember.setShipName(member.getShipName());
 
