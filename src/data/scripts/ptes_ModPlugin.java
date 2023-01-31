@@ -13,6 +13,7 @@ import data.world.ptes_gen;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.lazywizard.lazylib.JSONUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -110,11 +111,11 @@ public class ptes_ModPlugin extends BaseModPlugin {
                     String id = row.getString("id");
                     String idOverride = row.getString("countsAs");
                     if (idOverride.equals("")) idOverride = null;
-                    float weight = (float) row.getDouble("weight");
-                    float FPMulti = (float) row.getDouble("FPMulti");
+                    float weight = (float) row.optDouble("weight", 1);
+                    float FPMulti = (float) row.optDouble("FPMulti", 1);
                     String genClass = row.getString("effectPlugin");
-                    float lootMulti = (float) row.getDouble("lootMulti");
-                    float quality = loadFloat(row, "quality", 1);
+                    float lootMulti = (float) row.optDouble("lootMulti", 1);
+                    float quality = (float) row.optDouble("quality", 1);
                     ptes_faction New = new ptes_faction(id, idOverride, weight, FPMulti, classLoader.loadClass(genClass), lootMulti, quality);
                     weightedFactions.add(New, weight);
                     FactionMap.put(New.faction, New);
@@ -137,7 +138,7 @@ public class ptes_ModPlugin extends BaseModPlugin {
                     JSONObject row = spreadsheet.getJSONObject(i);
                     String parentID = row.getString("parentFactionID");
                     String subId = row.getString("subFactionID");
-                    float weight = (float) row.getDouble("weight");
+                    float weight = (float) row.optDouble("weight", 1);
                     FactionMap.get(parentID).subFactions.put(subId, weight);
                     subFactionsLoaded++;
                 }
@@ -160,7 +161,7 @@ public class ptes_ModPlugin extends BaseModPlugin {
                     JSONObject row = spreadsheet.getJSONObject(i);
                     String id = row.getString("id");
                     float cost = (float) row.getDouble("cost");
-                    float weight = (float) row.getDouble("weight");
+                    float weight = (float) row.optDouble("weight", 1);
                     String factions = row.getString("faction restriction");
 
                     salvageList.add(new ptes_salvageEntity(id, weight, cost, factions));
@@ -189,7 +190,7 @@ public class ptes_ModPlugin extends BaseModPlugin {
                             name = "[" + mod.getName() + "] " + name;
                         }
                         float cost = (float) row.getDouble("cost");
-                        float weight = (float) row.getDouble("weight");
+                        float weight = (float) row.optDouble("weight", 1);
                         float order = (float) row.getDouble("order");
                         String description = row.getString("description");
                         String iconPath = row.getString("icon");
@@ -269,18 +270,5 @@ public class ptes_ModPlugin extends BaseModPlugin {
         }
 
          */
-    }
-
-    public float loadFloat(JSONObject row, String id, float def) {
-        if (row.has(id)) {
-            try {
-                def = (float) row.getDouble(id);
-            } catch (JSONException ignored) {
-
-            } catch (Exception e) {
-                log.error(e);
-            }
-        }
-        return def;
     }
 }
