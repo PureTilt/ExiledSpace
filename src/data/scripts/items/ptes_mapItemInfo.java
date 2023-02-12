@@ -10,6 +10,8 @@ import org.lwjgl.util.Color;
 import java.util.ArrayList;
 import java.util.List;
 
+import static data.scripts.ptes_ModPlugin.mapObjectives;
+
 public class ptes_mapItemInfo extends SpecialItemData {
 
     public final int
@@ -18,6 +20,7 @@ public class ptes_mapItemInfo extends SpecialItemData {
     public final String FactionId;
     public final StarSystemGenerator.StarSystemType systemType;
     public List<String> effects = new ArrayList<>();
+    public String objectiveID = null;
 
     int dopID = MathUtils.getRandomNumberInRange(0, 99999999);
 
@@ -44,6 +47,7 @@ public class ptes_mapItemInfo extends SpecialItemData {
         this.FactionId = factionID;
         this.systemType = systemType;
         this.effects = effects;
+        this.objectiveID = mapObjectives.get(MathUtils.getRandomNumberInRange(0, mapObjectives.size() - 1));
     }
 
     @Override

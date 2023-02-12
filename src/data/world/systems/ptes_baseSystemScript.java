@@ -1,5 +1,6 @@
 package data.world.systems;
 
+import com.fs.starfarer.api.EveryFrameScript;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.*;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
@@ -7,15 +8,19 @@ import com.fs.starfarer.api.campaign.econ.MarketConditionAPI;
 import com.fs.starfarer.api.impl.campaign.fleets.FleetParamsV3;
 import com.fs.starfarer.api.impl.campaign.ids.FleetTypes;
 import com.fs.starfarer.api.impl.campaign.ids.Tags;
+import com.fs.starfarer.api.util.Misc;
 import data.scripts.items.ptes_mapItemInfo;
+import data.scripts.mapObjectives.ptes_baseMapObjective;
+import data.scripts.plugins.ptes_baseEffectPlugin;
 import data.scripts.plugins.ptes_faction;
+import data.scripts.plugins.ptes_mapObjectiveEntry;
 import org.lazywizard.lazylib.MathUtils;
 import org.lwjgl.util.vector.Vector2f;
 
 import java.util.*;
 
-import static data.scripts.ptes_ModPlugin.FactionMap;
-import static data.scripts.ptes_ModPlugin.mapEffectsMap;
+import static data.scripts.ptes_ModPlugin.*;
+import static data.scripts.ptes_ModPlugin.mapObjectivesMap;
 
 public class ptes_baseSystemScript {
 
@@ -108,6 +113,20 @@ public class ptes_baseSystemScript {
                         condition.setSurveyed(true);
                     }
                 }
+            }
+        }
+
+        //add objective
+        for (EveryFrameScript script : new ArrayList<>(system.getScripts())){
+            system.removeScript(script);
+        }
+        if (mapData.objectiveID != null && mapObjectivesMap.containsKey(mapData.objectiveID)){
+            try {
+                ptes_baseMapObjective objectiveClass = (ptes_baseMapObjective) mapObjectivesMap.get(mapData.objectiveID).genClass.newInstance();
+                objectiveClass.init(mapData, this);
+                system.addScript(objectiveClass);
+            } catch (InstantiationException | IllegalAccessException e) {
+                e.printStackTrace();
             }
         }
     }

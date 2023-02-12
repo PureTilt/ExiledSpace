@@ -1,0 +1,18 @@
+commodity,group,freq
+"wpn_:{weaponType:BALLISTIC, tags:[!no_drop, !restricted]}",weaponGood,100
+"wpn_:{weaponType:MISSILE, tags:[!no_drop, !restricted]}",weaponGood,100
+"wpn_:{weaponType:ENERGY, tags:[!no_drop, !restricted]}",weaponGood,100
+"ftr_:{tags:[!remnant, !no_drop, !restricted]}",weaponGood,100
+,,
+organs,expensiveGoods,30
+drugs,expensiveGoods,25
+hand_weapons,expensiveGoods,15
+volatiles,expensiveGoods,45
+rare_metals,expensiveGoods,40
+,,
+crew,cryoPods,85
+marines,cryoPods,15
+,,
+heavy_machinery,ESsupply,1
+supplies,ESsupply,10
+fuel,ESsupply,5

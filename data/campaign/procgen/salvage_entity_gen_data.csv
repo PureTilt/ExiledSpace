@@ -1,0 +1,5 @@
+id,rating,detection_range,type,autoXP,xpDiscover,xpSalvage,tags,drop_value,drop_random,defFaction,defQuality,probDefenders,minStr,maxStr,minSize,maxSize,probStation,stationRole
+ptes_big_supply_cache,0,1700,DISCOVERABLE,200,,,no_debris,ESsupply:80000,,,,,,,,,,
+big_weapons_cache,0,1700,DISCOVERABLE,200,,,no_debris,weaponGood:25000,weaponGood:50x3,,,,,,,,,
+cache_of_valuables,0,1700,DISCOVERABLE,200,,,no_debris,expensiveGoods:80000,,,,,,,,,,
+ptes_cryoPods,0,1700,DISCOVERABLE,200,,,no_debris,cryoPods:60000,,,,,,,,,,

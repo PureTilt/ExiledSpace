@@ -12,10 +12,12 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 import data.scripts.plugins.ptes_baseEffectPlugin;
 import data.scripts.plugins.ptes_mapEffectEntry;
+import data.scripts.plugins.ptes_mapObjectiveEntry;
 
 import java.util.HashMap;
 
 import static data.scripts.ptes_ModPlugin.mapEffectsMap;
+import static data.scripts.ptes_ModPlugin.mapObjectivesMap;
 
 public class ptes_mapItemPlugin extends BaseSpecialItemPlugin {
 
@@ -79,6 +81,11 @@ public class ptes_mapItemPlugin extends BaseSpecialItemPlugin {
 
         image.addPara("Power of fleets: " + FP, pad , Misc.getHighlightColor(), FP + "");
         image.addPara("Loot quantity: " + LP, pad , Misc.getHighlightColor(), LP + "");
+
+        if (mapItem.objectiveID != null && mapObjectivesMap.containsKey(mapItem.objectiveID)){
+            ptes_mapObjectiveEntry objectiveInfo = mapObjectivesMap.get(mapItem.objectiveID);
+            image.addPara("Objective: " + objectiveInfo.name, pad , Misc.getHighlightColor(), LP + "");
+        }
 
         tooltip.addImageWithText(opad);
 

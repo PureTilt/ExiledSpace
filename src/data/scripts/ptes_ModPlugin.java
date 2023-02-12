@@ -5,10 +5,7 @@ import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.ModSpecAPI;
 import com.fs.starfarer.api.campaign.FactionAPI;
 import com.fs.starfarer.api.util.WeightedRandomPicker;
-import data.scripts.plugins.ptes_faction;
-import data.scripts.plugins.ptes_mapDrop;
-import data.scripts.plugins.ptes_mapEffectEntry;
-import data.scripts.plugins.ptes_salvageEntity;
+import data.scripts.plugins.*;
 import data.world.ptes_gen;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,8 +28,12 @@ public class ptes_ModPlugin extends BaseModPlugin {
     static public WeightedRandomPicker<ptes_faction> weightedFactions = new WeightedRandomPicker<>();
     static public HashMap<String, ptes_faction> FactionMap = new HashMap<>();
     static public List<ptes_salvageEntity> salvageList = new ArrayList<>();
+
     static public HashMap<String, ptes_mapEffectEntry> mapEffectsMap = new HashMap<>();
     static public List<String> mapEffects = new ArrayList<>();
+
+    static public HashMap<String, ptes_mapObjectiveEntry> mapObjectivesMap = new HashMap<>();
+    static public List<String> mapObjectives = new ArrayList<>();
 
     static void logger(String text) {
         if (DevMode) log.info(text);
@@ -210,6 +211,39 @@ public class ptes_ModPlugin extends BaseModPlugin {
             }
         }
         logger("effects: " + mapEffects.size());
+
+        logger("loading Map Objectives");
+        mapObjectivesMap.clear();
+        mapObjectives.clear();
+        for (ModSpecAPI mod : mods) {
+            try {
+                //JSONArray spreadsheet = Global.getSettings().getMergedSpreadsheetDataForMod("id", "data/config/ExiledSpace/mapEffects.csv", "pt_exiledSpace");
+                JSONArray spreadsheet = Global.getSettings().loadCSV("data/config/ExiledSpace/mapObjectives.csv", mod.getId());
+
+                for (int i = 0; i < spreadsheet.length(); i++) {
+                    try {
+                        JSONObject row = spreadsheet.getJSONObject(i);
+                        String id = row.getString("id");
+                        String name = row.getString("name");
+                        float weight = (float) row.optDouble("weight", 10);
+                        String description = row.getString("description");
+                        String iconPath = row.getString("icon");
+                        Global.getSettings().loadTexture(iconPath);
+                        String genClass = row.getString("effectPlugin");
+                        //logger(name);
+                        mapObjectivesMap.put(id, new ptes_mapObjectiveEntry(id, name, weight, description, iconPath, classLoader.loadClass(genClass)));
+                        mapObjectives.add(id);
+                    } catch (Exception e) {
+                        log.error(e);
+                    }
+                }
+            } catch (RuntimeException ignored) {
+
+            } catch (Exception e) {
+                log.error(e);
+            }
+        }
+        logger("Objectives: " + mapObjectives.size());
     }
 
     public void factionCheck() {
