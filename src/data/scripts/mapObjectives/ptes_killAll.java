@@ -37,11 +37,7 @@ public class ptes_killAll extends ptes_baseMapObjective {
             if (fleet == null || !fleet.isAlive()){
                 fleetsToKill.remove(fleet);
                 if (fleetsToKill.isEmpty()){
-                    Global.getLogger(ptes_killAll.class).info("objective complete");
-                    MessageIntel intel = new MessageIntel("Annihilation" + "\n    Objective complete",
-                            Misc.getBasePlayerColor(), new String[] {"Objective complete"}, Misc.getTextColor());//, new String[] {"" + points}, Misc.getHighlightColor());
-                    intel.setIcon(Global.getSettings().getSpriteName("intel", "new_planet_info"));
-                    Global.getSector().getCampaignUI().addMessage(intel);
+                    notifyComplete();
                 }
             }
         }
