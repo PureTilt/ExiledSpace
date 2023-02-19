@@ -76,5 +76,13 @@
 		"nameInText":"cryo pods",
 		"shortName":"cryo pods",
 		"customDescriptionId":"weapon_cache",
+	},	
+	"cache_of_missiles":{
+		"baseId":"supply_cache",
+		"defaultName":"Giant pile of missiles",
+		"defaultRadius":35, 
+		"nameInText":"giant pile of missiles",
+		"shortName":"giant pile of missiless",
+		"customDescriptionId":"weapon_cache",
 	},
 }

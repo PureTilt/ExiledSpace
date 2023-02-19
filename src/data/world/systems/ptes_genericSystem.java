@@ -72,7 +72,7 @@ public class ptes_genericSystem extends ptes_baseSystemScript {
         system.updateAllOrbits();
 
         //choose BG
-        String BG = ptes_ModPlugin.backGrounds.get(MathUtils.getRandomNumberInRange(0, ptes_ModPlugin.backGrounds.size() - 1));
+        String BG = ptes_ModPlugin.weightedBacKGrounds.pick();
         system.setBackgroundTextureFilename("graphics/backgrounds/" + BG);
         /*
 

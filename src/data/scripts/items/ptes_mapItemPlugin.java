@@ -81,13 +81,16 @@ public class ptes_mapItemPlugin extends BaseSpecialItemPlugin {
 
         image.addPara("Power of fleets: " + FP, pad , Misc.getHighlightColor(), FP + "");
         image.addPara("Loot quantity: " + LP, pad , Misc.getHighlightColor(), LP + "");
+        tooltip.addImageWithText(opad);
 
         if (mapItem.objectiveID != null && mapObjectivesMap.containsKey(mapItem.objectiveID)){
             ptes_mapObjectiveEntry objectiveInfo = mapObjectivesMap.get(mapItem.objectiveID);
+            image = tooltip.beginImageWithText(objectiveInfo.iconPath, 48);
             image.addPara("Objective: " + objectiveInfo.name, pad , Misc.getHighlightColor(), LP + "");
+            image.addPara(objectiveInfo.description, pad , Misc.getHighlightColor(), LP + "");
+            tooltip.addImageWithText(opad);
         }
 
-        tooltip.addImageWithText(opad);
 
 
         if (systemType != null){

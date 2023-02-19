@@ -16,6 +16,7 @@ import com.fs.starfarer.api.ui.LabelAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 import com.fs.starfarer.api.util.Misc.Token;
+import data.scripts.intel.ptes_mapObjectiveIntel;
 import data.scripts.items.ptes_mapItemInfo;
 import data.scripts.plugins.ptes_mapEffectEntry;
 import org.apache.log4j.Logger;
@@ -47,7 +48,7 @@ public class ptes_riftGateDialog extends BaseCommandPlugin {
     protected InteractionDialogAPI dialog;
     protected Map<String, MemoryAPI> memoryMap;
     protected FactionAPI faction;
-    public StarSystemAPI system;
+    public StarSystemAPI system = null;
 
     protected void init(SectorEntityToken entity) {
         memory = entity.getMemoryWithoutUpdate();
@@ -133,6 +134,9 @@ public class ptes_riftGateDialog extends BaseCommandPlugin {
             options.setTooltipHighlights("ptes_moveGate", Math.round(entity.getMemoryWithoutUpdate().getExpire("$wasMoved")) + "");
         }
         options.setTooltip("ptes_giveRandomMap", "Its for debug and testing will remove it for release.\nIf it taunts you that much remove\nptes_giveRandomMap:Get random Map item\nin rules.csv first row options column");
+        if (!Global.getSector().getIntelManager().hasIntelOfClass(ptes_mapObjectiveIntel.class)){
+            Global.getSector().getIntelManager().addIntel(new ptes_mapObjectiveIntel(entity));
+        }
     }
 
 
@@ -263,7 +267,7 @@ public class ptes_riftGateDialog extends BaseCommandPlugin {
     }
 
     protected void GiveMap() {
-        dialog.showCustomDialog(800, 700, new ptes_giveMapUI());
+        dialog.showCustomDialog(1120, 700, new ptes_giveMapUI());
         /*
         WeightedRandomPicker<StarSystemGenerator.StarSystemType> picker = new WeightedRandomPicker<>();
         picker.addAll(EnumSet.allOf(StarSystemGenerator.StarSystemType.class));

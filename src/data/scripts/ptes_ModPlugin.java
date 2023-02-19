@@ -10,7 +10,6 @@ import data.world.ptes_gen;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.lazywizard.lazylib.JSONUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,7 +23,8 @@ public class ptes_ModPlugin extends BaseModPlugin {
     private static final org.apache.log4j.Logger log = Global.getLogger(ptes_ModPlugin.class);
     private static final boolean DevMode = Global.getSettings().isDevMode();
 
-    static public List<String> backGrounds = new ArrayList<>();
+    static public WeightedRandomPicker<String> weightedBacKGrounds = new WeightedRandomPicker<>();
+
     static public WeightedRandomPicker<ptes_faction> weightedFactions = new WeightedRandomPicker<>();
     static public HashMap<String, ptes_faction> FactionMap = new HashMap<>();
     static public List<ptes_salvageEntity> salvageList = new ArrayList<>();
@@ -78,7 +78,7 @@ public class ptes_ModPlugin extends BaseModPlugin {
         ClassLoader classLoader = Global.getSettings().getScriptClassLoader();
 
         logger("loading BGs");
-        backGrounds.clear();
+        weightedBacKGrounds.clear();
         for (ModSpecAPI mod : mods) {
             try {
                 //JSONArray spreadsheet = Global.getSettings().getMergedSpreadsheetDataForMod("name", "data/config/ExiledSpace/backgrounds.csv", "pt_exiledSpace");
@@ -87,8 +87,9 @@ public class ptes_ModPlugin extends BaseModPlugin {
                 for (int i = 0; i < spreadsheet.length(); i++) {
                     JSONObject row = spreadsheet.getJSONObject(i);
                     String name = row.getString("name");
+                    float weight = (float) row.optDouble("weight", 1);
 
-                    backGrounds.add(name);
+                    weightedBacKGrounds.add(name, weight);
                 }
             } catch (RuntimeException ignored) {
 
@@ -97,7 +98,7 @@ public class ptes_ModPlugin extends BaseModPlugin {
                 log.error("Cause: " + mod.getName());
             }
         }
-        logger("BGs: " + backGrounds.size());
+        logger("BGs: " + weightedBacKGrounds.getItems().size());
 
         logger("loading Factions");
         weightedFactions.clear();

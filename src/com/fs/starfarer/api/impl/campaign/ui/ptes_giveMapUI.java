@@ -14,6 +14,7 @@ import data.scripts.items.ptes_mapItemPlugin;
 import data.scripts.plugins.ptes_baseEffectPlugin;
 import data.scripts.plugins.ptes_faction;
 import data.scripts.plugins.ptes_mapEffectEntry;
+import data.scripts.plugins.ptes_mapObjectiveEntry;
 
 import java.util.*;
 
@@ -22,6 +23,8 @@ import static data.scripts.ptes_ModPlugin.*;
 public class ptes_giveMapUI implements CustomDialogDelegate {
 
     HashMap<ButtonAPI, ptes_faction> buttons = new HashMap<>();
+    HashMap<ButtonAPI, String> effectButtons = new HashMap<>();
+    HashMap<ButtonAPI, String> objectiveButtons = new HashMap<>();
 
     TextFieldAPI FP = null;
     TextFieldAPI LP = null;
@@ -29,7 +32,6 @@ public class ptes_giveMapUI implements CustomDialogDelegate {
     List<TextFieldAPI> textFields = new ArrayList<>();
     ButtonAPI giveMapButton = null;
 
-    HashMap<ButtonAPI, String> effectButtons = new HashMap<>();
 
     public ptes_giveMapUI(){
 
@@ -123,7 +125,40 @@ public class ptes_giveMapUI implements CustomDialogDelegate {
         }
         panel.addUIElement(effectsPanel).inTL(310f, 0f);
 
-        int Xpos = 620;
+        TooltipMakerAPI objectivesPanel = panel.createUIElement(width,height, true);
+        for (String entry : mapObjectives){
+            ptes_mapObjectiveEntry objective = mapObjectivesMap.get(entry);
+
+            ButtonAPI button = objectivesPanel.addAreaCheckbox("", null, Misc.getBasePlayerColor(), Misc.getDarkPlayerColor(), Misc.getBrightPlayerColor(), 0, 0, 0, true);
+
+            //radioSelectPanel.addToGrid(10,10,factionName,"10");
+
+            TooltipMakerAPI image = objectivesPanel.beginImageWithText(objective.iconPath, 48);
+
+            image.addPara(objective.name, Misc.getHighlightColor(), pad);
+            image.addPara(objective.description, pad);
+
+            image.addSpacer(10f);
+
+            objectivesPanel.addImageWithText(opad);
+
+            PositionAPI imageWithTextPosition = objectivesPanel.getPrev().getPosition();
+
+            float imageWithTextHeight = imageWithTextPosition.getHeight();
+            float imageWithTextWidth = imageWithTextPosition.getWidth();
+            float imageWithTextXOffset = 7f;
+            objectivesPanel.addSpacer(spacerHeight);
+            imageWithTextPosition.setXAlignOffset(imageWithTextXOffset);
+            imageWithTextPosition.setSize(imageWithTextWidth, imageWithTextHeight);
+            button.getPosition().setSize(backgroundBoxWidth, imageWithTextHeight + spacerHeight * 2f);
+            imageWithTextPosition.setYAlignOffset(imageWithTextHeight + spacerHeight);
+            objectivesPanel.addSpacer(0f).getPosition().setXAlignOffset(-imageWithTextXOffset);
+
+            objectiveButtons.put(button, objective.id);
+        }
+        panel.addUIElement(objectivesPanel).inTL(620f, 0f);
+
+        int Xpos = 930;
         TooltipMakerAPI numberPanel = panel.createUIElement(100, 50, false);
         numberPanel.addTitle("Fleet Points");
         TextFieldAPI text = numberPanel.addTextField(100,pad);
@@ -176,6 +211,7 @@ public class ptes_giveMapUI implements CustomDialogDelegate {
     public CustomUIPanelPlugin getCustomPanelPlugin() {
         return new CustomUIPanelPlugin() {
         ButtonAPI lastActive = null;
+        ButtonAPI lastActiveObjective = null;
 
         @Override
         public void positionChanged(PositionAPI position) {
@@ -206,6 +242,16 @@ public class ptes_giveMapUI implements CustomDialogDelegate {
                     }
                 }
             }
+            for (Map.Entry<ButtonAPI, String> pair : objectiveButtons.entrySet()){
+                ButtonAPI button = pair.getKey();
+                if (button.isChecked()){
+                    if (!button.equals(lastActiveObjective)){
+                        if (lastActiveObjective != null) lastActiveObjective.setChecked(false);
+                        lastActiveObjective = button;
+                        break;
+                    }
+                }
+            }
             if (!atLeastOne && lastActive != null) lastActive.setChecked(true);
             if (giveMapButton != null && giveMapButton.isChecked()){
                 try {
@@ -223,6 +269,15 @@ public class ptes_giveMapUI implements CustomDialogDelegate {
                         }
                     }
 
+                    String objective = null;
+                    for (Map.Entry<ButtonAPI, String> pair : objectiveButtons.entrySet()){
+                        ButtonAPI button = pair.getKey();
+                        if (button.isChecked()){
+                            objective = pair.getValue();
+                            break;
+                        }
+                    }
+
                     List<String> effects = new ArrayList<>();
                     for (Map.Entry<ButtonAPI, String> entry : effectButtons.entrySet()){
                         if (entry.getKey().isChecked()){
@@ -231,7 +286,7 @@ public class ptes_giveMapUI implements CustomDialogDelegate {
                     }
 
                     if (faction != null) {
-                        ptes_mapItemInfo map = new ptes_mapItemInfo("pos_map", null, Integer.parseInt(FP.getText()), Integer.parseInt(LP.getText()), faction, picker.pick(),effects);
+                        ptes_mapItemInfo map = new ptes_mapItemInfo("pos_map", null, Integer.parseInt(FP.getText()), Integer.parseInt(LP.getText()), faction, picker.pick(),effects, objective);
                         Global.getSector().getPlayerFleet().getCargo().addSpecial(map, 1);
                     }
 

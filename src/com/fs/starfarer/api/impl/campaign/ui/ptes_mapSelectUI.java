@@ -11,6 +11,7 @@ import com.fs.starfarer.api.util.Misc;
 import data.scripts.items.ptes_mapItemInfo;
 import data.scripts.items.ptes_mapItemPlugin;
 import data.scripts.plugins.ptes_mapEffectEntry;
+import data.scripts.plugins.ptes_mapObjectiveEntry;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,8 +20,7 @@ import java.util.Map;
 
 import static data.scripts.items.ptes_mapItemPlugin.systemTypeIcons;
 import static data.scripts.items.ptes_mapItemPlugin.systemTypeNames;
-import static data.scripts.ptes_ModPlugin.FactionMap;
-import static data.scripts.ptes_ModPlugin.mapEffectsMap;
+import static data.scripts.ptes_ModPlugin.*;
 
 public class ptes_mapSelectUI implements CustomDialogDelegate {
 
@@ -77,6 +77,7 @@ public class ptes_mapSelectUI implements CustomDialogDelegate {
                 image.addPara("This location contains fleets which mimics " + factionName + ".", pad, faction.getColor(), factionName);
                 image.addPara("Power of fleets: " + data.FP, pad, Misc.getHighlightColor(), data.FP + "");
                 image.addPara("Loot quantity: " + data.LP, pad, Misc.getHighlightColor(), data.LP + "");
+                image.addPara("Objective: " + mapObjectivesMap.get(data.objectiveID).name, pad, Misc.getHighlightColor(), data.LP + "");
 
                 image.addSpacer(10f);
 
@@ -115,7 +116,7 @@ public class ptes_mapSelectUI implements CustomDialogDelegate {
         //fleet previe table
         fleetPrev = panel.createUIElement(672, 235, true);
 
-        fleetPrev.addSectionHeading("Enemy preview", Alignment.MID, pad);
+        fleetPrev.addSectionHeading("Exemplary enemy fleet", Alignment.MID, pad);
         //fleetPrev.addShipList(7,5,57,Misc.getBasePlayerColor(),Global.getSector().getPlayerFleet().getMembersWithFightersCopy(), pad);
 
         panel.addUIElement(fleetPrev).inBL(414, 0f);
@@ -241,6 +242,17 @@ public class ptes_mapSelectUI implements CustomDialogDelegate {
                                 mapUI.mapData.add(infoPanel.getPrev());
                                 infoPanel.getPrev().getPosition().inTL(10, 25);
                                 elementCount++;
+
+                                if (map.objectiveID != null && mapObjectivesMap.containsKey(map.objectiveID)){
+                                    ptes_mapObjectiveEntry objectiveInfo = mapObjectivesMap.get(map.objectiveID);
+                                    image = infoPanel.beginImageWithText(objectiveInfo.iconPath, 64);
+                                    image.addPara("Objective: " + objectiveInfo.name, pad);
+                                    image.addPara(objectiveInfo.description, pad);
+                                    infoPanel.addImageWithText(pad);
+                                    mapUI.mapData.add(infoPanel.getPrev());
+                                    infoPanel.getPrev().getPosition().inTL(10, 25 + 69 * elementCount);
+                                    elementCount++;
+                                }
 
                                 image = infoPanel.beginImageWithText(systemTypeIcons.get(map.systemType), 64);
                                 image.addPara("System type:", pad);

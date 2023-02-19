@@ -64,6 +64,8 @@ public class ptes_baseSystemScript {
             }
             system.generateAnchorIfNeeded();
         }
+        spawnedFleets.clear();
+        spawnedLoot.clear();
 
         //move system under gate just in case
         system.getLocation().set(RiftGate.getLocation());

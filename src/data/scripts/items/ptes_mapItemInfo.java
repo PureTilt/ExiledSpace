@@ -41,13 +41,17 @@ public class ptes_mapItemInfo extends SpecialItemData {
     }
 
     public ptes_mapItemInfo(String id, String data, int FP, int lootPoints, String factionID, StarSystemGenerator.StarSystemType systemType, List<String> effects) {
+        this(id,  data, FP, lootPoints, factionID, systemType, effects, null);
+    }
+
+    public ptes_mapItemInfo(String id, String data, int FP, int lootPoints, String factionID, StarSystemGenerator.StarSystemType systemType, List<String> effects, String objectiveID) {
         super(id, data);
         this.LP = Math.round(lootPoints);
         this.FP = Math.round(FP);
         this.FactionId = factionID;
         this.systemType = systemType;
         this.effects = effects;
-        this.objectiveID = mapObjectives.get(MathUtils.getRandomNumberInRange(0, mapObjectives.size() - 1));
+        this.objectiveID = objectiveID;
     }
 
     @Override

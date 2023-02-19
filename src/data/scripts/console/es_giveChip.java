@@ -16,7 +16,7 @@ public class es_giveChip implements BaseCommand {
             Console.showMessage("Can only be used in market");
             return CommandResult.ERROR;
         }
-        dialog.showCustomDialog(800, 700, new ptes_giveMapUI());
+        dialog.showCustomDialog(1120, 700, new ptes_giveMapUI());
         return null;
     }
 }
