@@ -19,6 +19,7 @@ import com.fs.starfarer.api.util.Misc.Token;
 import data.scripts.intel.ptes_mapObjectiveIntel;
 import data.scripts.items.ptes_mapItemInfo;
 import data.scripts.plugins.ptes_mapEffectEntry;
+import data.scripts.plugins.ptes_mapObjectiveEntry;
 import org.apache.log4j.Logger;
 import org.lazywizard.lazylib.MathUtils;
 import org.lwjgl.util.vector.Vector2f;
@@ -31,6 +32,7 @@ import java.util.Map;
 import static data.scripts.items.ptes_mapItemPlugin.systemTypeIcons;
 import static data.scripts.items.ptes_mapItemPlugin.systemTypeNames;
 import static data.scripts.ptes_ModPlugin.mapEffectsMap;
+import static data.scripts.ptes_ModPlugin.mapObjectivesMap;
 
 public class ptes_riftGateDialog extends BaseCommandPlugin {
 
@@ -146,7 +148,7 @@ public class ptes_riftGateDialog extends BaseCommandPlugin {
 
     protected void GetInToSystem() {
         int effects = ((ptes_mapItemInfo) entity.getMemory().get("$activeMap")).effects.size();
-        final int height = 264 + 58 * effects + (effects > 0 ? 20 : 0);
+        final int height = 322 + 58 * effects + (effects > 0 ? 20 : 0);
         dialog.showCustomDialog(500, height, new CustomDialogDelegate() {
             @Override
             public void createCustomDialog(CustomPanelAPI panel) {
@@ -178,6 +180,13 @@ public class ptes_riftGateDialog extends BaseCommandPlugin {
 
                 subPanel.addImageWithText(opad);
 
+                if (activeMap.objectiveID != null){
+                    ptes_mapObjectiveEntry objectiveInfo = mapObjectivesMap.get(activeMap.objectiveID);
+                    image = subPanel.beginImageWithText(objectiveInfo.iconPath, 48);
+                    image.addPara("Objective: " + objectiveInfo.name, pad , Misc.getHighlightColor());
+                    image.addPara(objectiveInfo.description, pad , Misc.getHighlightColor());
+                    subPanel.addImageWithText(opad);
+                }
 
                 if (activeMap.systemType != null){
                     image = subPanel.beginImageWithText(systemTypeIcons.get(activeMap.systemType), 48);
@@ -186,6 +195,7 @@ public class ptes_riftGateDialog extends BaseCommandPlugin {
 
                     subPanel.addImageWithText(opad);
                 }
+
 
                 if (!activeMap.effects.isEmpty()){
                     subPanel.addSectionHeading("Additional effects", Alignment.MID, pad);

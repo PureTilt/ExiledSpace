@@ -77,7 +77,9 @@ public class ptes_mapSelectUI implements CustomDialogDelegate {
                 image.addPara("This location contains fleets which mimics " + factionName + ".", pad, faction.getColor(), factionName);
                 image.addPara("Power of fleets: " + data.FP, pad, Misc.getHighlightColor(), data.FP + "");
                 image.addPara("Loot quantity: " + data.LP, pad, Misc.getHighlightColor(), data.LP + "");
-                image.addPara("Objective: " + mapObjectivesMap.get(data.objectiveID).name, pad, Misc.getHighlightColor(), data.LP + "");
+                if (data.objectiveID != null){
+                    image.addPara("Objective: " + mapObjectivesMap.get(data.objectiveID).name, pad, Misc.getHighlightColor(), data.LP + "");
+                }
 
                 image.addSpacer(10f);
 

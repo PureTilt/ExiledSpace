@@ -113,6 +113,7 @@ public class ptes_genericSystem extends ptes_baseSystemScript {
                 }
             }
         }
+        float averageCost = LootPoints / (3 + Math.round(LootPoints / 200 - 0.5f));
         float pointsSpend = 0;
         WeightedRandomPicker<BaseThemeGenerator.EntityLocation> validPoints = BaseThemeGenerator.getLocations(new Random(), system, 50f, locationsList);
 

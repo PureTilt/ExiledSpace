@@ -4,8 +4,8 @@ ptes_big_supply_cache,50,20,
 big_weapons_cache,50,20,
 cache_of_valuables,50,20,
 ptes_cryoPods,50,15,
-cache_of_missiles,200,15,
-alpha_site_weapons_cache,75,3,omega
+cache_of_missiles,100,15,
+alpha_site_weapons_cache,75,1000,omega
 station_research_remnant,250,20,remnant
 station_mining_remnant,175,28,remnant
 orbital_habitat_remnant,125,40,remnant
