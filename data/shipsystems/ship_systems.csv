@@ -1,2 +1,2 @@
 name,id,flux/second,f/s (base rate),f/s (base cap),flux/use,f/u (base rate),f/u (base cap),cr/u,max uses,regen,charge up,active,down,cooldown,toggle,noDissipation,noHardDissipation,hardFlux,noFiring,noTurning,noStrafing,noAccel,noShield,noVent,isPhaseCloak,tags,icon
-Phase Interdiction Field,bt_phaseInterdictionField,250,,,,,,,,,0.5,,0.5,1,TRUE,,,,,,,,,,,,graphics/icons/hullsys/displacer.png
+Phase Interdiction Field,bt_phaseInterdictionField,,,,,,,,,,1,5,0.5,5,,,,,,,,,,,,,graphics/icons/hullsys/displacer.png

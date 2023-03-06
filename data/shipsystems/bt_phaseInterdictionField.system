@@ -2,9 +2,9 @@
 	"id":"bt_phaseInterdictionField",
 	"type":"STAT_MOD",
 	#"aiType":"HIGH_ENERGY_FOCUS",
-	"aiType":"WEAPON_BOOST",
+	"aiType":"NONE",
 	
-	"statsScript":"data.scripts.combat.shipSystems.bt_phaseInterdictionField",
+	"statsScript":"data.scripts.combat.shipSystems.bt_overdrive",
 	
 	
 	"useSound":"system_high_energy_focus_activate",
