@@ -117,21 +117,34 @@ public class ptes_genericSystem extends ptes_baseSystemScript {
          */
 
         WeightedRandomPicker<ptes_salvageEntity> weightedSalvageEntities = new WeightedRandomPicker<>();
-        float averageCost = LootPoints / (3 + Math.round(LootPoints / 200 - 0.5f));
+        int lootRolls = 0;
+        {
+            float lootPointsUsed = 0;
+            float pointsToNext = (float) (200f * Math.pow(1.1f, lootRolls));
+            while (lootPointsUsed + pointsToNext <= LootPoints) {
+                lootPointsUsed += pointsToNext;
+                lootRolls++;
+            }
+        }
+        lootRolls += 2;
+        float averageCost = LootPoints / lootRolls;
         float lowestDeviation = Float.MAX_VALUE;
         for (ptes_salvageEntity salvage : salvageList){
             float deviation = Math.abs(salvage.cost - averageCost);
             if (lowestDeviation > deviation) lowestDeviation = deviation;
         }
+
+        Global.getLogger(ptes_genericSystem.class).info(LootPoints + " / " + averageCost + " / " + lootRolls);
         for (ptes_salvageEntity salvage : salvageList){
-            float weightMulti = (float) Math.pow(0.7f, Math.pow(((Math.abs(salvage.cost - averageCost) - lowestDeviation)/averageCost),2f));
-            weightedSalvageEntities.add(salvage, salvage.weight * weightMulti);
-            Global.getLogger(ptes_genericSystem.class).info("added" + salvage.id + " " + salvage.cost + " " + weightMulti);
+            if (salvage.factions.size() == 0 || salvage.factions.contains(faction.faction)) {
+                float weightMulti = (float) Math.pow(0.7f, Math.pow(((Math.abs(salvage.cost - averageCost) - lowestDeviation) / averageCost), 2f));
+                weightedSalvageEntities.add(salvage, salvage.weight * weightMulti);
+                Global.getLogger(ptes_genericSystem.class).info("added: " + salvage.id + " " + salvage.cost + " " + weightMulti);
+            }
         }
         float pointsSpend = 0;
         WeightedRandomPicker<BaseThemeGenerator.EntityLocation> validPoints = BaseThemeGenerator.getLocations(new Random(), system, 50f, locationsList);
 
-        Global.getLogger(ptes_genericSystem.class).info(LootPoints);
         while (pointsSpend < LootPoints) {
             BaseThemeGenerator.EntityLocation placeToSpawn = null;
             while (placeToSpawn == null) {
@@ -139,7 +152,6 @@ public class ptes_genericSystem extends ptes_baseSystemScript {
                 if (placeToSpawn.orbit == null || placeToSpawn.orbit.getFocus() instanceof CustomCampaignEntityAPI)
                     placeToSpawn = null;
             }
-            float pointsLeft = LootPoints - pointsSpend;
             ptes_salvageEntity entity;
             entity = weightedSalvageEntities.pick();
             if (entity == null) break;
