@@ -137,9 +137,15 @@ public class ptes_genericSystem extends ptes_baseSystemScript {
         Global.getLogger(ptes_genericSystem.class).info(LootPoints + " / " + averageCost + " / " + lootRolls);
         for (ptes_salvageEntity salvage : salvageList){
             if (salvage.factions.size() == 0 || salvage.factions.contains(faction.faction)) {
-                float weightMulti = (float) Math.pow(0.7f, Math.pow(((Math.abs(salvage.cost - averageCost) - lowestDeviation) / averageCost), 2f));
+                //loot distribution graph, x are cost compare to desired (average cost)
+                //https://www.desmos.com/calculator/flfxgduqxc
+                float weightMulti = salvage.cost / averageCost;
+                if (weightMulti < 1){
+                    weightMulti = 1 / weightMulti;
+                }
+                weightMulti = (float) Math.pow(0.4f, weightMulti - 1);
                 weightedSalvageEntities.add(salvage, salvage.weight * weightMulti);
-                Global.getLogger(ptes_genericSystem.class).info("added: " + salvage.id + " " + salvage.cost + " " + weightMulti);
+                Global.getLogger(ptes_genericSystem.class).info("added: " + Math.round(weightMulti * 1000f) / 1000f + " " + salvage.cost + " " + salvage.id);
             }
         }
         float pointsSpend = 0;

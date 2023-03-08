@@ -213,6 +213,7 @@ public class ptes_ModPlugin extends BaseModPlugin {
         }
         logger("effects: " + mapEffects.size());
 
+
         logger("loading Map Objectives");
         mapObjectivesMap.clear();
         mapObjectives.clear();
