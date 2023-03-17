@@ -9,3 +9,4 @@ ptes_stealthFleets,Stealth Fleets,50,1,1,Reduces sensor profile of fleets by 50%
 ptes_mirror,Shadow Mirror,200,0.1,1,Create copy of player fleet.,graphics/icons/markets/habitable.png,data.scripts.mapEffects.ptes_mirror
 ptes_monofleets,Monofleets,100,0.5,1,All fleets compose of 1 ship class.,graphics/icons/skills/officer_training.png,data.scripts.mapEffects.ptes_monofleets
 ptes_lobster,Lobster,50,0.5,1,All fleets carry some amount of Volturnian Lobster in cargo.,graphics/icons/ptes_lobster.png,data.scripts.mapEffects.ptes_lobster
+ptes_arsenal,Arsenal,100,0.75,1,Gradualy increase quality of fleet's weapons.,graphics/icons/skills/ordnance_expert.png,data.scripts.mapEffects.ptes_arsenal
