@@ -38,7 +38,7 @@ public class ptes_giveMapUI implements CustomDialogDelegate {
     }
 
     @Override
-    public void createCustomDialog(CustomPanelAPI panel) {
+    public void createCustomDialog(CustomPanelAPI panel, CustomDialogCallback callback) {
         float pad = 3f;
         float spad = 5f;
         float opad = 10f;
@@ -300,6 +300,11 @@ public class ptes_giveMapUI implements CustomDialogDelegate {
         public void processInput(List<InputEventAPI> events) {
 
         }
-    };
+
+            @Override
+            public void buttonPressed(Object buttonId) {
+
+            }
+        };
     }
 }

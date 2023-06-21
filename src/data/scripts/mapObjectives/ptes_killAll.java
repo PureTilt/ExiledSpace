@@ -19,7 +19,7 @@ import static data.scripts.ptes_ModPlugin.mapObjectivesMap;
 public class ptes_killAll extends ptes_baseMapObjective {
 
     public List<CampaignFleetAPI> fleetsToKill = new ArrayList<>();
-    public float wasFleets = 0f;
+    public int wasFleets = 0;
 
     public void init(ptes_mapItemInfo map, ptes_baseSystemScript script){
         fleetsToKill.clear();

@@ -1,0 +1,17 @@
+{
+"music":{
+	####################################
+	# "source" can also be a directory #
+	####################################
+	"music_ES_encounter":[
+		{
+			"source":"sounds/music",
+			"volume":1,
+			"files":[
+				"ES_encounter_Haplogynae.ogg",
+			],
+			"randomStart":false, 
+		},
+	],
+},	
+}

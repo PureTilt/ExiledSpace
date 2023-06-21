@@ -38,8 +38,8 @@ public class ptes_mapDrop extends BaseCampaignEventListener {
         List<FleetMemberData> casualties = plugin.getLoserData().getOwnCasualties();
         float FleetFP = 0;
         if (plugin.getLoser().getMemoryWithoutUpdate().contains("$fleetFP")) {
-            FleetFP = (int) plugin.getLoser().getMemoryWithoutUpdate().get("$fleetFP");
-            Global.getLogger(ptes_mapDrop.class).info(FleetFP);
+            FleetFP = Math.round((float) plugin.getLoser().getMemoryWithoutUpdate().get("$fleetFP"));
+            logger(FleetFP + "");
         } else {
             for (FleetMemberData member : casualties) {
                 if (member.getStatus() == Status.NORMAL) continue;

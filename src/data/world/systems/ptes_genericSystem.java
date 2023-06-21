@@ -193,7 +193,7 @@ public class ptes_genericSystem extends ptes_baseSystemScript {
             if (faction.factionOverride != null) fleet.getMemoryWithoutUpdate().set("$faction", faction.factionOverride);
             else fleet.getMemoryWithoutUpdate().set("$faction", faction.faction);
 
-            fleet.getMemoryWithoutUpdate().set("$fleetFP", fleet.getFleetPoints());
+            fleet.getMemoryWithoutUpdate().set("$fleetFP", params.combatPts);
 
             //TODO: decide on FP threshold
             float DPreduction = ptes_DPRReductionCalc.DPRReduction(fleet.getFleetPoints());

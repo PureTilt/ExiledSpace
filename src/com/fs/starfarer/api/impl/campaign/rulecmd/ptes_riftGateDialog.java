@@ -2,18 +2,15 @@ package com.fs.starfarer.api.impl.campaign.rulecmd;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.*;
+import com.fs.starfarer.api.campaign.comm.IntelInfoPlugin;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.campaign.rules.MemoryAPI;
-import com.fs.starfarer.api.characters.FullName;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.impl.campaign.GateEntityPlugin;
 import com.fs.starfarer.api.impl.campaign.ids.Submarkets;
 import com.fs.starfarer.api.impl.campaign.ui.ptes_giveMapUI;
 import com.fs.starfarer.api.impl.campaign.ui.ptes_mapSelectUI;
-import com.fs.starfarer.api.ui.Alignment;
-import com.fs.starfarer.api.ui.CustomPanelAPI;
-import com.fs.starfarer.api.ui.LabelAPI;
-import com.fs.starfarer.api.ui.TooltipMakerAPI;
+import com.fs.starfarer.api.ui.*;
 import com.fs.starfarer.api.util.Misc;
 import com.fs.starfarer.api.util.Misc.Token;
 import data.scripts.intel.ptes_mapObjectiveIntel;
@@ -28,6 +25,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static data.scripts.items.ptes_mapItemPlugin.systemTypeIcons;
 import static data.scripts.items.ptes_mapItemPlugin.systemTypeNames;
@@ -109,6 +107,7 @@ public class ptes_riftGateDialog extends BaseCommandPlugin {
         String text = "Jump will consume:\n" + supplies + " Supplies\n" + fuel + " Fuel";
         String text2 = "";
         String text3 = "";
+        String text4 = "";
         Color highlightColorSup = Misc.getHighlightColor();
         Color highlightColorFuel = Misc.getHighlightColor();
         if (Global.getSettings().isDevMode()) {
@@ -127,8 +126,15 @@ public class ptes_riftGateDialog extends BaseCommandPlugin {
                 highlightColorFuel = Misc.getNegativeHighlightColor();
             }
         }
+        system = Global.getSector().getStarSystem("PoSMap");
+        boolean blockJump = system == null || system.getJumpPoints().size() <= 0;
+        if (blockJump) {
+            text4 = "No location chip was used yet.";
+            text += "\n" + text4;
+            options.setEnabled("ptes_getInside", false);
+        }
         options.setTooltip("ptes_getInside", text);
-        options.setTooltipHighlights("ptes_getInside", supplies + "", fuel + "", text2, text3);
+        options.setTooltipHighlights("ptes_getInside", supplies + "", fuel + "", text2, text3, text4);
         options.setTooltipHighlightColors("ptes_getInside", highlightColorSup, highlightColorFuel, Misc.getNegativeHighlightColor(), Misc.getNegativeHighlightColor());
         if (entity.getMemoryWithoutUpdate().contains("$wasMoved")) {
             options.setEnabled("ptes_moveGate", false);
@@ -136,7 +142,7 @@ public class ptes_riftGateDialog extends BaseCommandPlugin {
             options.setTooltipHighlights("ptes_moveGate", Math.round(entity.getMemoryWithoutUpdate().getExpire("$wasMoved")) + "");
         }
         options.setTooltip("ptes_giveRandomMap", "Its for debug and testing will remove it for release.\nIf it taunts you that much remove\nptes_giveRandomMap:Get random Map item\nin rules.csv first row options column");
-        if (!Global.getSector().getIntelManager().hasIntelOfClass(ptes_mapObjectiveIntel.class)){
+        if (!Global.getSector().getIntelManager().hasIntelOfClass(ptes_mapObjectiveIntel.class)) {
             Global.getSector().getIntelManager().addIntel(new ptes_mapObjectiveIntel(entity));
         }
     }
@@ -151,17 +157,17 @@ public class ptes_riftGateDialog extends BaseCommandPlugin {
         final int height = 322 + 58 * effects + (effects > 0 ? 20 : 0);
         dialog.showCustomDialog(500, height, new CustomDialogDelegate() {
             @Override
-            public void createCustomDialog(CustomPanelAPI panel) {
+            public void createCustomDialog(CustomPanelAPI panel, CustomDialogCallback callback) {
                 float pad = 3f;
                 float spad = 5f;
                 float opad = 10f;
 
                 float width = 500;
 
-                TooltipMakerAPI subPanel = panel.createUIElement(width,height, true);
+                TooltipMakerAPI subPanel = panel.createUIElement(width, height, true);
                 subPanel.setTitleOrbitronLarge();
                 subPanel.setParaOrbitronLarge();
-                if (dialog.getInteractionTarget().getMemory().contains("$mapVisited") && (boolean) dialog.getInteractionTarget().getMemory().get("$mapVisited")){
+                if (dialog.getInteractionTarget().getMemory().contains("$mapVisited") && (boolean) dialog.getInteractionTarget().getMemory().get("$mapVisited")) {
                     subPanel.addTitle("Confirm jump (location was already visited)");
                 } else {
                     subPanel.addTitle("Confirm jump");
@@ -170,25 +176,25 @@ public class ptes_riftGateDialog extends BaseCommandPlugin {
                 ptes_mapItemInfo activeMap = (ptes_mapItemInfo) entity.getMemory().get("$activeMap");
 
                 FactionAPI faction = Global.getSector().getFaction(activeMap.FactionId);
-                String factionName =  faction.getDisplayNameWithArticle();
+                String factionName = faction.getDisplayNameWithArticle();
 
                 TooltipMakerAPI image = subPanel.beginImageWithText(faction.getCrest(), 48);
                 image.addPara("This location contains fleets which mimics " + factionName + ".", pad, faction.getColor(), factionName);
 
-                image.addPara("Power of fleets: " + activeMap.FP, pad , Misc.getHighlightColor(), activeMap.FP + "");
-                image.addPara("Loot quantity: " + activeMap.LP, pad , Misc.getHighlightColor(), activeMap.LP + "");
+                image.addPara("Power of fleets: " + activeMap.FP, pad, Misc.getHighlightColor(), activeMap.FP + "");
+                image.addPara("Loot quantity: " + activeMap.LP, pad, Misc.getHighlightColor(), activeMap.LP + "");
 
                 subPanel.addImageWithText(opad);
 
-                if (activeMap.objectiveID != null){
+                if (activeMap.objectiveID != null) {
                     ptes_mapObjectiveEntry objectiveInfo = mapObjectivesMap.get(activeMap.objectiveID);
                     image = subPanel.beginImageWithText(objectiveInfo.iconPath, 48);
-                    image.addPara("Objective: " + objectiveInfo.name, pad , Misc.getHighlightColor());
-                    image.addPara(objectiveInfo.description, pad , Misc.getHighlightColor());
+                    image.addPara("Objective: " + objectiveInfo.name, pad, Misc.getHighlightColor());
+                    image.addPara(objectiveInfo.description, pad, Misc.getHighlightColor());
                     subPanel.addImageWithText(opad);
                 }
 
-                if (activeMap.systemType != null){
+                if (activeMap.systemType != null) {
                     image = subPanel.beginImageWithText(systemTypeIcons.get(activeMap.systemType), 48);
                     image.addPara("System type:", pad);
                     image.addPara(systemTypeNames.get(activeMap.systemType), pad);
@@ -197,9 +203,9 @@ public class ptes_riftGateDialog extends BaseCommandPlugin {
                 }
 
 
-                if (!activeMap.effects.isEmpty()){
+                if (!activeMap.effects.isEmpty()) {
                     subPanel.addSectionHeading("Additional effects", Alignment.MID, pad);
-                    for (String effectID : activeMap.effects){
+                    for (String effectID : activeMap.effects) {
                         ptes_mapEffectEntry effect = mapEffectsMap.get(effectID);
                         TooltipMakerAPI effectEntry = subPanel.beginImageWithText(effect.iconPath, 48);
 
@@ -377,6 +383,21 @@ public class ptes_riftGateDialog extends BaseCommandPlugin {
 
                     public float getFuelRangeMult() { // just for showing it on the map when picking destination
                         return 0f;
+                    }
+
+                    @Override
+                    public List<IntelInfoPlugin.ArrowData> getArrows() {
+                        return null;
+                    }
+
+                    @Override
+                    public List<MarkerData> getMarkers() {
+                        return null;
+                    }
+
+                    @Override
+                    public Set<StarSystemAPI> getStarSystemsToShow() {
+                        return null;
                     }
                 });
     }

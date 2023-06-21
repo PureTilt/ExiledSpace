@@ -130,7 +130,7 @@
 	"illegalCommodities":[
 	],
 	"music":{
-		"encounter_hostile":"music_tritach_encounter_hostile",
+		"encounter_hostile":"music_ES_encounter",
 	},	
 	"portraits":{
 		"standard_male":[

@@ -154,6 +154,9 @@ public class ptes_baseSystemScript {
         params.officerLevelLimit = 5;
         params.commanderLevelLimit = 7;
         params.maxNumShips = 100;
+        if (EnemyFP <= 250) {
+            params.maxShipSize = 3;
+        }
         params.minShipSize = Math.min(3, Math.round(EnemyFP / 200f - 0.5f));
         params.ignoreMarketFleetSizeMult = true;
         params.modeOverride = FactionAPI.ShipPickMode.PRIORITY_THEN_ALL;

@@ -1,3 +1,4 @@
 command,class,tags,syntax,help
 givechip,data.scripts.console.es_giveChip,"es,cheat,market",givechip,Opens menu where you can get any chip
 spawnEntity,data.scripts.console.es_spawnEntity,"es,cheat,campaign",spawnEntity [id],Spawns entity on your location
+giveUp,data.scripts.console.es_spawnEntity,"es,campaign,market,combat",giveUp,You know the rules and so do i

@@ -46,7 +46,7 @@ public class ptes_mapSelectUI implements CustomDialogDelegate {
     //List<ButtonAPI> buttons = new ArrayList<>();
 
     @Override
-    public void createCustomDialog(CustomPanelAPI panel) {
+    public void createCustomDialog(CustomPanelAPI panel, CustomDialogCallback callback) {
         mainPanel = panel;
 
 
@@ -289,6 +289,11 @@ public class ptes_mapSelectUI implements CustomDialogDelegate {
 
             @Override
             public void processInput(List<InputEventAPI> events) {
+
+            }
+
+            @Override
+            public void buttonPressed(Object buttonId) {
 
             }
         };
