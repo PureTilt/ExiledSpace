@@ -1,11 +1,10 @@
-package data.scripts.combat.shipSystems;
+package data.scripts.combat.BT.AI;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.impl.combat.BaseShipSystemScript;
 import com.fs.starfarer.api.util.IntervalUtil;
-import data.scripts.combat.plugins.bt_interdictionRenderer;
 import org.lazywizard.lazylib.combat.AIUtils;
 
 import java.util.ArrayList;

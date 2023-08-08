@@ -4,7 +4,7 @@
 	#"aiType":"HIGH_ENERGY_FOCUS",
 	"aiType":"NONE",
 	
-	"statsScript":"data.scripts.combat.shipSystems.bt_overdrive",
+	"statsScript":"data.scripts.combat.BT.AI.bt_overdrive",
 	
 	
 	"useSound":"system_high_energy_focus_activate",

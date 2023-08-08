@@ -1,10 +1,10 @@
-package data.scripts.combat.shipSystems;
+package data.scripts.combat.BT.AI;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.impl.combat.BaseShipSystemScript;
-import data.scripts.combat.plugins.bt_temporaryHPPlugin;
+import data.scripts.combat.BT.plugins.bt_temporaryHPPlugin;
 import org.lazywizard.lazylib.MathUtils;
 
 import java.awt.*;

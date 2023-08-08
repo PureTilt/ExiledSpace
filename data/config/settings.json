@@ -5,6 +5,8 @@
 	"graphics":{
 		"marker":{
 			"direction2":"graphics/icons/PT_dirmarker2.png",
+			"ptes_engineFlame":"graphics/fx/ptes_engineFlame.png",
+			"ptes_engineFlame2":"graphics/fx/ptes_engineFlame2.png",
 		},
 		"icons":{
 			"ptpos_binaryClose":"graphics/icons/ptpos_binaryClose.png",

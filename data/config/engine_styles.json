@@ -1,0 +1,37 @@
+{
+    "ES_alien_black":{  #ID of engine's style, you have to specify the same into .ship files on engine slots
+		"glowSprite":"graphics/fx/ptes_engineFlame2.png", # not implemented
+		"glowShape":"graphics/fx/engineflame32b.png",
+		"engineColor":[151, 44, 232,255],
+		"engineCampaignColor":[200,90,70,255],
+		"contrailParticleSizeMult":0,
+		"contrailParticleDuration":0,
+		"contrailParticleFinalSizeMult":2.5,
+		"contrailMaxSpeedMult":0.5,
+		"contrailAngularVelocityMult":0.5,
+		"contrailColor":[50,50,50,50],
+		"contrailCampaignColor":[200,90,70,75],
+		#"contrailCampaignColor":[120,50,50,50],
+		"type":"GLOW", # GLOW or SMOKE
+		"glowSizeMult":0.5,
+    },
+	
+	"ES_alien_main":{  #ID of engine's style, you have to specify the same into .ship files on engine slots
+		"glowSprite":"graphics/fx/ptes_engineFlame2.png", # not implemented
+		"glowShape":"graphics/fx/engineflame32b.png",
+		"engineColor":[45, 235, 187,255],
+		"engineCampaignColor":[200,90,70,255],
+		"contrailParticleSizeMult":0,
+		"contrailParticleDuration":0,
+		"contrailParticleFinalSizeMult":2.5,
+		"contrailMaxSpeedMult":0.5,
+		"contrailAngularVelocityMult":0.5,
+		"contrailColor":[50,50,50,50],
+		"contrailCampaignColor":[200,90,70,75],
+		#"contrailCampaignColor":[120,50,50,50],
+		"type":"GLOW", # GLOW or SMOKE
+		"glowSizeMult":0.5,
+    },
+}
+
+	

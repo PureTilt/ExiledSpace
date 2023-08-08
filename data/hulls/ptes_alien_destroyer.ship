@@ -1,0 +1,101 @@
+{
+  "hullName": "Allen Destroyer",
+  "hullId": "ptes_alien_destroyer",
+  "hullSize": "DESTROYER",
+  "spriteName": "graphics/ships/allen_destroyer.png",
+  "style": "LOW_TECH",
+  "height": 170,
+  "width": 180,
+  "center": [90, 113.5],
+  "collisionRadius": 145.5,
+  "shieldCenter": [-28.5, 0],
+  "shieldRadius": 112.5,
+  "viewOffset": 0,
+  "weaponSlots": [],
+  "engineSlots": [
+    {
+      "location": [1, -54.5],
+      "length": 39.436916,
+      "width": 9.105948,
+      "angle": -137.5,
+      "contrailSize": 9.105948,
+      "style": "CUSTOM",
+      "styleId": "ES_alien_main"
+    },
+    {
+      "location": [1, 54.5],
+      "length": 39.436916,
+      "width": 9.105948,
+      "angle": 137.5,
+      "contrailSize": 9.105948,
+      "style": "CUSTOM",
+      "styleId": "ES_alien_main"
+    },
+    {
+      "location": [-0.5, -56],
+      "length": 20.59302,
+      "width": 17.427277,
+      "angle": -139.5,
+      "contrailSize": 17.427277,
+      "style": "CUSTOM",
+      "styleId": "ES_alien_black"
+    },
+    {
+      "location": [-0.5, 56],
+      "length": 20.59302,
+      "width": 17.427277,
+      "angle": 139.5,
+      "contrailSize": 17.427277,
+      "style": "CUSTOM",
+      "styleId": "ES_alien_black"
+    },
+    {
+      "location": [-70.5, -0],
+      "length": 39,
+      "width": 10,
+      "angle": 180,
+      "contrailSize": 10,
+      "style": "CUSTOM",
+      "styleId": "ES_alien_main"
+    },
+    {
+      "location": [-71.5, -0],
+      "length": 20.59302,
+      "width": 17.427277,
+      "angle": 180,
+      "contrailSize": 17.427277,
+      "style": "CUSTOM",
+      "styleId": "ES_alien_black"
+    }
+  ],
+  "bounds": [
+    -68.5, 8.5,
+    -102.5, 12.5,
+    -108, 22,
+    -71, 33.5,
+    -45, 55,
+    -24.5, 28.5,
+    -12.5, 35,
+    -19.5, 50,
+    -1, 60,
+    13.5, 86,
+    38, 67,
+    50.5, 42,
+    38, 18.5,
+    47.5, 8.5,
+    47.5, -8.5,
+    38, -18.5,
+    50.5, -42,
+    38, -67,
+    13.5, -86,
+    -1, -60,
+    -19.5, -50,
+    -12.5, -35,
+    -24.5, -28.5,
+    -45, -55,
+    -71, -33.5,
+    -108, -22,
+    -102.5, -12.5,
+    -68.5, -8.5
+  ]
+}

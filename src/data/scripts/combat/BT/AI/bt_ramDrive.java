@@ -1,4 +1,4 @@
-package data.scripts.combat.shipSystems;
+package data.scripts.combat.BT.AI;
 
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.impl.combat.BaseShipSystemScript;

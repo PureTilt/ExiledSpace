@@ -52,6 +52,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\data\weapons\weapon_data.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
       </map>
     </option>
   </component>

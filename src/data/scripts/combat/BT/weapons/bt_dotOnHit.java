@@ -1,4 +1,4 @@
-package data.scripts.combat.weapons;
+package data.scripts.combat.BT.weapons;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.*;

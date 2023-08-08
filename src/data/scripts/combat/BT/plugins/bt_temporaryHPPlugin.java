@@ -1,4 +1,4 @@
-package data.scripts.combat.plugins;
+package data.scripts.combat.BT.plugins;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.CombatEntityAPI;

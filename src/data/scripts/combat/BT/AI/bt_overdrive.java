@@ -1,4 +1,4 @@
-package data.scripts.combat.shipSystems;
+package data.scripts.combat.BT.AI;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.*;

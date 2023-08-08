@@ -3,7 +3,7 @@
 	"type":"STAT_MOD",
 	"aiType":"DAMPER_FIELD",
 	
-	"statsScript":"data.scripts.combat.shipSystems.bt_ramDrive",
+	"statsScript":"data.scripts.combat.BT.AI.bt_ramDrive",
 	
 	"jitterUnderColor":[255,165,90,155],
 	"jitterUnderCopies":25,

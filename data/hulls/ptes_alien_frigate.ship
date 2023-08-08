@@ -1,0 +1,76 @@
+{
+  "hullName": "Allen Frigate",
+  "hullId": "ptes_alien_frigate",
+  "hullSize": "FRIGATE",
+  "spriteName": "graphics/ships/allen_frigate.png",
+  "style": "LOW_TECH",
+  "height": 108,
+  "width": 115,
+  "center": [57, 55],
+  "collisionRadius": 67,
+  "shieldCenter": [0, -0],
+  "shieldRadius": 64.5,
+  "viewOffset": 0,
+  "weaponSlots": [],
+  "engineSlots": [
+  
+    {
+      "location": [-28.5, -16.5],
+      "length": 43.5,
+      "width": 9,
+      "angle": 170,
+      "contrailSize": 9,
+      "style": "CUSTOM",
+      "styleId": "ES_alien_main"
+    },
+    {
+      "location": [-28.5, 16.5],
+      "length": 43.5,
+      "width": 9,
+      "angle": -170,
+      "contrailSize": 9,
+      "style": "CUSTOM",
+      "styleId": "ES_alien_main"
+    },
+    {
+      "location": [-29.5, -16],
+      "length": 23.5,
+      "width": 16,
+      "angle": 171.5,
+      "contrailSize": 16,
+      "style": "CUSTOM",
+      "styleId": "ES_alien_black"
+    },
+    {
+      "location": [-29.5, 16],
+      "length": 23.5,
+      "width": 16,
+      "angle": -171.5,
+      "contrailSize": 16,
+      "style": "CUSTOM",
+      "styleId": "ES_alien_black"
+    }
+  ],
+  "bounds": [
+    -44, 24,
+    -29, 29,
+    -24.5, 36,
+    -9, 34.5,
+    0, 51.5,
+    23, 34.5,
+    50, 24,
+    29.5, 18,
+    29.5, -18,
+    50, -24,
+    23, -34.5,
+    0, -51.5,
+    -9, -34.5,
+    -24.5, -36,
+    -29, -29,
+    -44, -24,
+    -25, -10.5,
+    -51, -2,
+    -51, 2,
+    -25, 10.5
+  ]
+}

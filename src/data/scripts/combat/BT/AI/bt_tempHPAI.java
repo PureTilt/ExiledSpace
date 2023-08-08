@@ -1,10 +1,10 @@
-package data.scripts.combat.shipSystems.AI;
+package data.scripts.combat.BT.AI;
 
 import com.fs.starfarer.api.combat.*;
 import com.fs.starfarer.api.util.IntervalUtil;
 import org.lwjgl.util.vector.Vector2f;
 
-import static data.scripts.combat.shipSystems.bt_temporaryHP.maxRange;
+import static data.scripts.combat.BT.AI.bt_temporaryHP.maxRange;
 import static org.lazywizard.lazylib.combat.AIUtils.getNearbyAllies;
 
 public class bt_tempHPAI implements ShipSystemAIScript {

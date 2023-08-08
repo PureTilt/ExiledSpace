@@ -3,7 +3,7 @@
 	"specClass":"projectile",
 	"spawnType":"BALLISTIC",
 	"collisionClass":"PROJECTILE_FF",
-	"onHitEffect":"data.scripts.combat.weapons.bt_dotOnHit",
+	"onHitEffect":"data.scripts.combat.BT.weapons.bt_dotOnHit",
 	"collisionClassByFighter":"PROJECTILE_FIGHTER",
 	"length":30.0,
 	"width":8.5,

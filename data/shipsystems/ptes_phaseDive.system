@@ -1,14 +1,20 @@
 {
-	"id":"bt_phaseDive",
+	"id":"ptes_phaseDive",
 	"type":"STAT_MOD",
 	"aiType":"DAMPER_FIELD",
 	
-	"statsScript":"data.scripts.combat.shipSystems.bt_phaseDive",
+	"statsScript":"data.scripts.combat.shipSystems.ptes_phaseDive",
 	
 	
 	"soundFilterType":"LOWPASS",
 	"soundFilterGain":0.75,
 	"soundFilterGainHF":0.25,
+	
+	"engineGlowColor":[0,0,0,0],
+	"engineGlowContrailColor":[0,0,0,0],
+	"engineGlowLengthMult":0,
+	"engineGlowWidthMult":0,
+	"engineGlowGlowMult":0,
 	
 
 	"fadeActivationSoundOnChargedown":true,

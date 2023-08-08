@@ -1,10 +1,9 @@
-package data.scripts.combat.plugins;
+package data.scripts.combat.BT.plugins;
 
-import com.fs.graphics.LayeredRenderer;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.*;
 import com.fs.starfarer.api.graphics.SpriteAPI;
-import data.scripts.combat.shipSystems.bt_phaseInterdictionField;
+import data.scripts.combat.BT.AI.bt_phaseInterdictionField;
 
 import java.awt.*;
 import java.io.IOException;
